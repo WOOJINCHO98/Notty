@@ -1,1 +1,67 @@
-<h1>Notty</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notty</title>
+    <h1 style="display:inline">Notty</h1>
+    <a href='/setting/' style="font-size:40px">=</a>
+</head>
+<body>
+
+<!--
+    <br>
+    <input type="text" value='출발역'>
+    <br>
+    <input type="text" value='도착역'>
+    <br><br>
+    <a href='{% url 'detail' %}'>검색
+-->
+<!--
+    <form action="{% url 'detail' %}" method="POST">
+        {% csrf_token %}
+
+        <div>
+          <input type="text" name="start" id="start" value='출발역'>
+        </div>
+        <div>
+          <input type="text" name="fin" id="fin" value='도착역'>
+        </div>
+        <br>
+        <table>
+            {{ form.as_table }}
+          </table>
+          <input type="submit" value="검색">
+      </form>
+-->
+
+
+<!--모델폼 해보기
+      <form action="{% url 'detail' %}" method="POST">
+        {% csrf_token %}
+        <table>
+          {{ form.as_table }}
+        </table>
+        <input type="submit" value="제출">
+      </form>
+-->
+
+    <form action="{% url 'detail' %}" method="POST">
+        {% csrf_token %}
+
+        <div>
+        <label for="start">출발역</label>
+        <input type="text" name="start" id="start">
+        </div>
+        <div>
+        <label for="fin">도착역</label>
+        <input type="text" name="fin" id="fin">
+        </div>
+        <br>
+        <input type="submit" value="제출">
+    </form>
+
+    <a href='/favorite/'>❤</a>
+</body>
+</html>

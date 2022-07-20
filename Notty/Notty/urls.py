@@ -20,5 +20,8 @@ import NottyApp.views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',NottyApp.views.home, name='home'),
-    
+    path('setting/',NottyApp.views.setting, name='setting'),
+    path('detail/',NottyApp.views.detail, name='detail'),
+    path('favorite/',NottyApp.views.favorite, name='favorite'),
+
 ]
