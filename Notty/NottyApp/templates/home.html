@@ -47,19 +47,14 @@
       </form>
 -->
 
-    <form action="{% url 'detail' %}" method="POST">
+    <form action="" method="POST">
         {% csrf_token %}
+        <table>
 
-        <div>
-        <label for="start">출발역</label>
-        <input type="text" name="start" id="start">
-        </div>
-        <div>
-        <label for="fin">도착역</label>
-        <input type="text" name="fin" id="fin">
-        </div>
-        <br>
-        <input type="submit" value="제출">
+          {{ form.as_table }}
+        
+        </table>
+        <input type="submit" value="검색">
     </form>
 
     <a href='/favorite/'>❤</a>
