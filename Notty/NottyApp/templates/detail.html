@@ -14,15 +14,36 @@
 
 
     <br>
-    <p>현재 역 위치 : {{ obj }}</p>
+    <p>현재 역 위치 : 
+            {% for o in obj %}
+                {{ o.STATION_NM}}
+                {{ o.LINE_NUM }}
+            {% endfor %}
+    </p>
     <div class="box">
-        <div style="border:1px solid; padding:10px;"> 경로 </div>
+        <div style="border:1px solid; padding:10px;">     
+            {% for o in obj %}
 
+                {{ o.STATION_NM}}
+                ( 코드 : {{ o.STATION_CD}} )   
+            {% endfor %}
+            
+            {% for o in gps_obj %}
+
+              x : {{ o.x}} y : {{ o.y}}
+            {% endfor %}
+            
+            <br>
+            {% for o in dest_obj %}
+                {{ o.STATION_NM}}
+                ( 코드 : {{ o.STATION_CD}} )  
+            {% endfor %}
+
+        </div>
+        test {{gps_obj}}
+        {{gps_x}}
     </div>
-
-
-
-
+    
 
 
 </body>
