@@ -43,14 +43,14 @@ def home(request):
                 'Authorization': 'KakaoAK 3ccf2a2e8eef7ee20af37e425477d818',
             }
 
-            st_params = {
+            params = {
                 'page': '1',
                 'size': '1',
                 'sort': 'accuracy',
                 'query': searchword+'역',
             }
 
-            st_gps_response = requests.get('https://dapi.kakao.com/v2/local/search/keyword.json', st_params=st_params, headers=headers)
+            st_gps_response = requests.get('https://dapi.kakao.com/v2/local/search/keyword.json', params=params, headers=headers)
             st_gps_resdata = st_gps_response.text
             st_gps_obj = json.loads(st_gps_resdata)
             st_gps_obj = st_gps_obj['documents']
@@ -62,23 +62,23 @@ def home(request):
                 st_gps_y = item.get('y')
             
             #도착 위치 좌표 잡기
-            dest_params = {
+            params = {
                 'page': '1',
                 'size': '1',
                 'sort': 'accuracy',
                 'query': destword+'역',
             }
 
-            dest_gps_response = requests.get('https://dapi.kakao.com/v2/local/search/keyword.json', dest_params=dest_params, headers=headers)
+            dest_gps_response = requests.get('https://dapi.kakao.com/v2/local/search/keyword.json', params=params, headers=headers)
             dest_gps_resdata = dest_gps_response.text
             dest_gps_obj = json.loads(dest_gps_resdata)
             dest_gps_obj = dest_gps_obj['documents']
             
             for item in dest_gps_obj:
                 dest_gps_x = item.get('x')
-                
+            
             for item in dest_gps_obj:
-                dest_gps_y = item.get('y')            
+                dest_gps_y = item.get('y')
             
             
             
@@ -98,6 +98,17 @@ def home(request):
             dest_obj = dest_obj['SearchInfoBySubwayNameService']
             dest_obj = dest_obj['row']
             
+            #서울특별시_대중교통환승경로 조회 서비스 https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15000414
+            path_key = '1WiWiadJdsEUw9VTAe8%2BpAs4K39k6ulLAGzN%2BBDvLuUedlyrTLO%2FwKXqkXW%2FEuTRT%2FLepS1etUJeBAyOvq9xVg%3D%3D'
+            path_api_url = 'http://ws.bus.go.kr/api/rest/pathinfo/getPathInfoBySubway?ServiceKey='+path_key+'&startX='+st_gps_x+'&startY='+st_gps_y+'&endX='+dest_gps_x+'&endY='+dest_gps_y+'&resultType=json'
+            path_response = requests.get(path_api_url)
+            path_resdata = path_response.text
+            path_obj = json.loads(path_resdata)
+            path_obj = path_obj['msgBody']
+            path_obj = path_obj['itemList']
+            for item in path_obj:
+                path_list = item.get('pathList')
+     
             #서울교통공사_서울 도시철도 목적지 경로정보 https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15097640
             '''
             key = 'oTsloDJ6xmHymJiItQxmn1GEp2HiiX+8fA+H6PRKbCUp3XWPNEAViCpeWOir0YPCRpFHH3XQ6i6PlYwNdEg4dQ=='
@@ -121,7 +132,7 @@ def home(request):
             finobj = finobj['realtimeArrivalList']
             
             #############################################
-            return render(request,'detail.html',{'obj' : obj,'gps_obj':gps_obj ,'dest_obj':dest_obj , 'finobj' : finobj})
+            return render(request,'detail.html',{'obj' : obj,'path_list':path_list,'dest_obj':dest_obj , 'finobj' : finobj})
     else:
         form = RouteForm()
 

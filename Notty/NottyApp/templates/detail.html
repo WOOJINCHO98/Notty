@@ -38,10 +38,21 @@
                 {{ o.STATION_NM}}
                 ( 코드 : {{ o.STATION_CD}} )  
             {% endfor %}
+            <br><br>
+            환승 경로 표시
+            <br>
+                    
+            {% for o in path_list %}
+                {{ o.fname}}
+                <br>
+                {{ o.tname}}
+            {% endfor %}
+            <br>
 
         </div>
-        test {{gps_obj}}
-        {{gps_x}}
+         
+        <br>            
+
     </div>
     
 
