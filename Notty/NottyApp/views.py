@@ -6,8 +6,6 @@ from .forms import RouteForm
 from .models import Route
 import json
 
-
-
 key_num = '646f7a76646a6f7733317842746455'
     
 
@@ -98,6 +96,34 @@ def home(request):
             dest_obj = dest_obj['SearchInfoBySubwayNameService']
             dest_obj = dest_obj['row']
             
+            #지하철 경로 조회 서비스 (최소 시간) https://devming.tistory.com/214 |http://swopenAPI.seoul.go.kr/api/subway/인증Key값/요청데이터형식/OpenAPI 이름(서비스명)/요청 데이터 행 시작번호/요청 데이터 행 끝번호/출발역명/도착역명
+            path_key = '646f7a76646a6f7733317842746455'
+            path_api_url = 'http://swopenAPI.seoul.go.kr/api/subway/'+path_key+'/json/shortestRoute/0/5/'+searchword+'/'+destword
+            path_response = requests.get(path_api_url)
+            path_resdata = path_response.text
+            path_obj = json.loads(path_resdata)
+            path_obj = path_obj['shortestRouteList']
+            
+            #최소 시간 찾기
+            path_time = ['999','999','999','999','999']
+            
+            i=0
+            for time in path_obj:
+                path_time[i] = time.get('shtTravelTm')
+                i=i+1
+            min_path_time = min(path_time)
+            for item in path_obj:
+                path_list = item.get('shtStatnNm')
+                path_msg = item.get('shtTravelMsg')
+                if min_path_time == item.get('shtTravelTm'):
+                    break
+                
+            path_list = path_list.split(',')
+            path_value_0 = path_list[0]
+
+            
+            
+            '''
             #서울특별시_대중교통환승경로 조회 서비스 https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15000414
             path_key = '1WiWiadJdsEUw9VTAe8%2BpAs4K39k6ulLAGzN%2BBDvLuUedlyrTLO%2FwKXqkXW%2FEuTRT%2FLepS1etUJeBAyOvq9xVg%3D%3D'
             path_api_url = 'http://ws.bus.go.kr/api/rest/pathinfo/getPathInfoBySubway?ServiceKey='+path_key+'&startX='+st_gps_x+'&startY='+st_gps_y+'&endX='+dest_gps_x+'&endY='+dest_gps_y+'&resultType=json'
@@ -108,7 +134,7 @@ def home(request):
             path_obj = path_obj['itemList']
             for item in path_obj:
                 path_list = item.get('pathList')
-     
+            '''
             #서울교통공사_서울 도시철도 목적지 경로정보 https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15097640
             '''
             key = 'oTsloDJ6xmHymJiItQxmn1GEp2HiiX+8fA+H6PRKbCUp3XWPNEAViCpeWOir0YPCRpFHH3XQ6i6PlYwNdEg4dQ=='
@@ -132,7 +158,7 @@ def home(request):
             finobj = finobj['realtimeArrivalList']
             
             #############################################
-            return render(request,'detail.html',{'obj' : obj,'path_list':path_list,'dest_obj':dest_obj , 'finobj' : finobj})
+            return render(request,'detail.html',{'obj' : obj,'path_msg':path_msg,'min_path_time':min_path_time,'path_time':path_time,'path_list':path_list,'path_obj':path_obj,'dest_obj':dest_obj , 'finobj' : finobj})
     else:
         form = RouteForm()
 

@@ -39,16 +39,32 @@
                 ( 코드 : {{ o.STATION_CD}} )  
             {% endfor %}
             <br><br>
-            환승 경로 표시
+            최소 시간 경로 표시
+            <br><br>    
+            
+            {{path_list.0}} {{path_list.1}} {{path_list.2}} {{path_list.3}} {{path_list.4}} {{path_list.5}} 
+            {{path_list.6}} {{path_list.7}} {{path_list.8}} {{path_list.9}} {{path_list.10}} {{path_list.11}}
+            {{path_list.12}} {{path_list.13}} {{path_list.14}} {{path_list.15}} {{path_list.16}} {{path_list.17}} 
+            {{path_list.18}} {{path_list.19}} {{path_list.20}} {{path_list.21}} {{path_list.22}} {{path_list.23}}
+            {{path_list.24}} {{path_list.25}} {{path_list.26}} {{path_list.27}} {{path_list.28}} {{path_list.29}} 
+            {{path_list.30}} {{path_list.31}} {{path_list.32}} {{path_list.33}} {{path_list.34}} {{path_list.35}} 
+            {{path_list.36}} {{path_list.37}} {{path_list.38}} {{path_list.39}} {{path_list.40}} {{path_list.41}} 
+            {{path_list.42}} {{path_list.43}} {{path_list.44}} {{path_list.45}} {{path_list.46}} {{path_list.47}}
+            {{path_list.48}} {{path_list.49}} {{path_list.50}} {{path_list.51}} {{path_list.52}} {{path_list.53}} 
+            {{path_list.54}} {{path_list.55}} {{path_list.56}} {{path_list.57}} {{path_list.58}} {{path_list.59}}
+            {{path_list.60}} {{path_list.61}} {{path_list.62}} {{path_list.63}} {{path_list.64}} {{path_list.65}} 
+            {{path_list.66}} {{path_list.67}} {{path_list.68}} {{path_list.69}} {{path_list.70}} {{path_list.71}} 
             <br>
-                    
-            {% for o in path_list %}
-                {{ o.fname}}
-                <br>
-                {{ o.tname}}
-            {% endfor %}
+            <br>
+            {{path_msg}}
             <br>
 
+            <br>
+            test 
+            <br>
+            <br>
+            {{min_path_time}} 분 소요됩니다.
+            <br>
         </div>
          
         <br>            
