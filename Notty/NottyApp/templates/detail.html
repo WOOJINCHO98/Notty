@@ -14,11 +14,7 @@
 
 
     <br>
-    <p>현재 역 위치 : 
-            {% for o in obj %}
-                {{ o.STATION_NM}}
-            {% endfor %}
-            {{line}}
+    <p>현재 역 위치 : {{line}}
     </p>
     <div class="box">
         <div style="border:1px solid; padding:10px;">     
@@ -57,8 +53,41 @@
             <br>
             <br>
             {{sht_path_msg}}
+            <br><br><br>
+            ------------------------------------------------------------
             <br>
-            <br><br>
+            환승 나눠서 경로 표시 (최단시간)
+            <br>
+            {{joined_path_station_list.0}} {{joined_path_station_list.1}} {{joined_path_station_list.2}} {{joined_path_station_list.3}} {{joined_path_station_list.4}} {{joined_path_station_list.5}} 
+            {{joined_path_station_list.6}} {{joined_path_station_list.7}} {{joined_path_station_list.8}} {{joined_path_station_list.9}} {{joined_path_station_list.10}} {{joined_path_station_list.11}}
+            {{joined_path_station_list.12}} {{joined_path_station_list.13}} {{joined_path_station_list.14}} {{joined_path_station_list.15}} {{joined_path_station_list.16}} {{joined_path_station_list.17}} 
+            {{joined_path_station_list.18}} {{joined_path_station_list.19}} {{joined_path_station_list.20}} {{joined_path_station_list.21}} {{joined_path_station_list.22}} {{joined_path_station_list.23}}
+            {{joined_path_station_list.24}} {{joined_path_station_list.25}} {{joined_path_station_list.26}} {{joined_path_station_list.27}} {{joined_path_station_list.28}} {{joined_path_station_list.29}} 
+            {{joined_path_station_list.30}} {{joined_path_station_list.31}} {{joined_path_station_list.32}} {{joined_path_station_list.33}} {{joined_path_station_list.34}} {{joined_path_station_list.35}} 
+            {{joined_path_station_list.36}} {{joined_path_station_list.37}} {{joined_path_station_list.38}} {{joined_path_station_list.39}} {{joined_path_station_list.40}} {{joined_path_station_list.41}} 
+            {{joined_path_station_list.42}} {{joined_path_station_list.43}} {{joined_path_station_list.44}} {{joined_path_station_list.45}} {{joined_path_station_list.46}} {{joined_path_station_list.47}}
+            {{joined_path_station_list.48}} {{joined_path_station_list.49}} {{joined_path_station_list.50}} {{joined_path_station_list.51}} {{joined_path_station_list.52}} {{joined_path_station_list.53}} 
+            {{joined_path_station_list.54}} {{joined_path_station_list.55}} {{joined_path_station_list.56}} {{joined_path_station_list.57}} {{joined_path_station_list.58}} {{joined_path_station_list.59}}
+            {{joined_path_station_list.60}} {{joined_path_station_list.61}} {{joined_path_station_list.62}} {{joined_path_station_list.63}} {{joined_path_station_list.64}} {{joined_path_station_list.65}} 
+            {{joined_path_station_list.66}} {{joined_path_station_list.67}} {{joined_path_station_list.68}} {{joined_path_station_list.69}} {{joined_path_station_list.70}} {{joined_path_station_list.71}} 
+            - {{line}}            <br>
+            {{after_trans_path_list.0}} {{after_trans_path_list.1}} {{after_trans_path_list.2}} {{after_trans_path_list.3}} {{after_trans_path_list.4}} {{after_trans_path_list.5}} 
+            {{after_trans_path_list.6}} {{after_trans_path_list.7}} {{after_trans_path_list.8}} {{after_trans_path_list.9}} {{after_trans_path_list.10}} {{after_trans_path_list.11}}
+            {{after_trans_path_list.12}} {{after_trans_path_list.13}} {{after_trans_path_list.14}} {{after_trans_path_list.15}} {{after_trans_path_list.16}} {{after_trans_path_list.17}} 
+            {{after_trans_path_list.18}} {{after_trans_path_list.19}} {{after_trans_path_list.20}} {{after_trans_path_list.21}} {{after_trans_path_list.22}} {{after_trans_path_list.23}}
+            {{after_trans_path_list.24}} {{after_trans_path_list.25}} {{after_trans_path_list.26}} {{after_trans_path_list.27}} {{after_trans_path_list.28}} {{after_trans_path_list.29}} 
+            {{after_trans_path_list.30}} {{after_trans_path_list.31}} {{after_trans_path_list.32}} {{after_trans_path_list.33}} {{after_trans_path_list.34}} {{after_trans_path_list.35}} 
+            {{after_trans_path_list.36}} {{after_trans_path_list.37}} {{after_trans_path_list.38}} {{after_trans_path_list.39}} {{after_trans_path_list.40}} {{after_trans_path_list.41}} 
+            {{after_trans_path_list.42}} {{after_trans_path_list.43}} {{after_trans_path_list.44}} {{after_trans_path_list.45}} {{after_trans_path_list.46}} {{after_trans_path_list.47}}
+            {{after_trans_path_list.48}} {{after_trans_path_list.49}} {{after_trans_path_list.50}} {{after_trans_path_list.51}} {{after_trans_path_list.52}} {{after_trans_path_list.53}} 
+            {{after_trans_path_list.54}} {{after_trans_path_list.55}} {{after_trans_path_list.56}} {{after_trans_path_list.57}} {{after_trans_path_list.58}} {{after_trans_path_list.59}}
+            {{after_trans_path_list.60}} {{after_trans_path_list.61}} {{after_trans_path_list.62}} {{after_trans_path_list.63}} {{after_trans_path_list.64}} {{after_trans_path_list.65}} 
+            {{after_trans_path_list.66}} {{after_trans_path_list.67}} {{after_trans_path_list.68}} {{after_trans_path_list.69}} {{after_trans_path_list.70}} {{after_trans_path_list.71}} 
+            - {{trans_line}}
+            <br>
+            ------------------------------------------------------------
+            <br>
+            <br><br><br>
             최소 환승 경로 표시
             <br><br>    
             
@@ -78,31 +107,16 @@
             <br>
             {{min_path_msg}}
             <br>
+            <br>
+            ------------------------------------------------------------
+            <br>
+            <br>
+            <br>
+            <br>
+            
+            <br>
 
-            <br>
-            test 
-            <br>
-            <br>
-            {{min_sht_path_time}} 분 소요됩니다.
-            <br>
-            {{min_path_time}} 분 소요됩니다.
-            <br>
-            {{min_min_path_time}}
-            <br>
-            {% for o in finobj %}
-                {{o.status}}
-            {% endfor %}
-            <br>
-            <br>
-            {{trans_path_list}}
-            <br><br>
-            {% for o in trans_path_list %}
-                {{o.fname}}
-                <br>
-                {{o.tname}}
-            {% endfor %}
         </div>
-         {{line_obj}}
         <br>            
 
     </div>
