@@ -12,8 +12,7 @@ key_num = '646f7a76646a6f7733317842746455'
 
 #서울시 역코드로 지하철역별 열차 시간표 정보 검색 https://data.seoul.go.kr/dataList/OA-101/A/1/datasetView.do
 api_url4 = 'http://openAPI.seoul.go.kr:8088/'+key_num+'/json/SearchSTNTimeTableByIDService/1/5/0309/1/1/'
-
-
+#
 
 
 # Create your views here.
