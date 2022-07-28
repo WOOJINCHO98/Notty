@@ -14,7 +14,7 @@
 
 
     <br>
-    <p>현재 역 위치 : {{line}}
+    <p>현재 역 위치 : {{line}} / {{min_line}}
     </p>
     <div class="box">
         <div style="border:1px solid; padding:10px;">     
@@ -89,7 +89,7 @@
             <br>
             <br><br><br>
             최소 환승 경로 표시
-            <br><br>    
+            <br><br><br>
             
             {{min_path_list.0}} {{min_path_list.1}} {{min_path_list.2}} {{min_path_list.3}} {{min_path_list.4}} {{min_path_list.5}} 
             {{min_path_list.6}} {{min_path_list.7}} {{min_path_list.8}} {{min_path_list.9}} {{min_path_list.10}} {{min_path_list.11}}
@@ -107,6 +107,37 @@
             <br>
             {{min_path_msg}}
             <br>
+            <br><br>
+            ------------------------------------------------------------
+            <br>
+            환승 나눠서 경로 표시 (최단시간)
+            <br>
+            {{min_joined_path_station_list.0}} {{min_joined_path_station_list.1}} {{min_joined_path_station_list.2}} {{min_joined_path_station_list.3}} {{min_joined_path_station_list.4}} {{min_joined_path_station_list.5}} 
+            {{min_joined_path_station_list.6}} {{min_joined_path_station_list.7}} {{min_joined_path_station_list.8}} {{min_joined_path_station_list.9}} {{min_joined_path_station_list.10}} {{min_joined_path_station_list.11}}
+            {{min_joined_path_station_list.12}} {{min_joined_path_station_list.13}} {{min_joined_path_station_list.14}} {{min_joined_path_station_list.15}} {{min_joined_path_station_list.16}} {{min_joined_path_station_list.17}} 
+            {{min_joined_path_station_list.18}} {{min_joined_path_station_list.19}} {{min_joined_path_station_list.20}} {{min_joined_path_station_list.21}} {{min_joined_path_station_list.22}} {{min_joined_path_station_list.23}}
+            {{min_joined_path_station_list.24}} {{min_joined_path_station_list.25}} {{min_joined_path_station_list.26}} {{min_joined_path_station_list.27}} {{min_joined_path_station_list.28}} {{min_joined_path_station_list.29}} 
+            {{min_joined_path_station_list.30}} {{min_joined_path_station_list.31}} {{min_joined_path_station_list.32}} {{min_joined_path_station_list.33}} {{min_joined_path_station_list.34}} {{min_joined_path_station_list.35}} 
+            {{min_joined_path_station_list.36}} {{min_joined_path_station_list.37}} {{min_joined_path_station_list.38}} {{min_joined_path_station_list.39}} {{min_joined_path_station_list.40}} {{min_joined_path_station_list.41}} 
+            {{min_joined_path_station_list.42}} {{min_joined_path_station_list.43}} {{min_joined_path_station_list.44}} {{min_joined_path_station_list.45}} {{min_joined_path_station_list.46}} {{min_joined_path_station_list.47}}
+            {{min_joined_path_station_list.48}} {{min_joined_path_station_list.49}} {{min_joined_path_station_list.50}} {{min_joined_path_station_list.51}} {{min_joined_path_station_list.52}} {{min_joined_path_station_list.53}} 
+            {{min_joined_path_station_list.54}} {{min_joined_path_station_list.55}} {{min_joined_path_station_list.56}} {{min_joined_path_station_list.57}} {{min_joined_path_station_list.58}} {{min_joined_path_station_list.59}}
+            {{min_joined_path_station_list.60}} {{min_joined_path_station_list.61}} {{min_joined_path_station_list.62}} {{min_joined_path_station_list.63}} {{min_joined_path_station_list.64}} {{min_joined_path_station_list.65}} 
+            {{min_joined_path_station_list.66}} {{min_joined_path_station_list.67}} {{min_joined_path_station_list.68}} {{min_joined_path_station_list.69}} {{min_joined_path_station_list.70}} {{min_joined_path_station_list.71}} 
+            - {{min_line}}            <br>
+            {{min_after_trans_path_list.0}} {{min_after_trans_path_list.1}} {{min_after_trans_path_list.2}} {{min_after_trans_path_list.3}} {{min_after_trans_path_list.4}} {{min_after_trans_path_list.5}} 
+            {{min_after_trans_path_list.6}} {{min_after_trans_path_list.7}} {{min_after_trans_path_list.8}} {{min_after_trans_path_list.9}} {{min_after_trans_path_list.10}} {{min_after_trans_path_list.11}}
+            {{min_after_trans_path_list.12}} {{min_after_trans_path_list.13}} {{min_after_trans_path_list.14}} {{min_after_trans_path_list.15}} {{min_after_trans_path_list.16}} {{min_after_trans_path_list.17}} 
+            {{min_after_trans_path_list.18}} {{min_after_trans_path_list.19}} {{min_after_trans_path_list.20}} {{min_after_trans_path_list.21}} {{min_after_trans_path_list.22}} {{min_after_trans_path_list.23}}
+            {{min_after_trans_path_list.24}} {{min_after_trans_path_list.25}} {{min_after_trans_path_list.26}} {{min_after_trans_path_list.27}} {{min_after_trans_path_list.28}} {{min_after_trans_path_list.29}} 
+            {{min_after_trans_path_list.30}} {{min_after_trans_path_list.31}} {{min_after_trans_path_list.32}} {{min_after_trans_path_list.33}} {{min_after_trans_path_list.34}} {{min_after_trans_path_list.35}} 
+            {{min_after_trans_path_list.36}} {{min_after_trans_path_list.37}} {{min_after_trans_path_list.38}} {{min_after_trans_path_list.39}} {{min_after_trans_path_list.40}} {{min_after_trans_path_list.41}} 
+            {{min_after_trans_path_list.42}} {{min_after_trans_path_list.43}} {{min_after_trans_path_list.44}} {{min_after_trans_path_list.45}} {{min_after_trans_path_list.46}} {{min_after_trans_path_list.47}}
+            {{min_after_trans_path_list.48}} {{min_after_trans_path_list.49}} {{min_after_trans_path_list.50}} {{min_after_trans_path_list.51}} {{min_after_trans_path_list.52}} {{min_after_trans_path_list.53}} 
+            {{min_after_trans_path_list.54}} {{min_after_trans_path_list.55}} {{min_after_trans_path_list.56}} {{min_after_trans_path_list.57}} {{min_after_trans_path_list.58}} {{min_after_trans_path_list.59}}
+            {{min_after_trans_path_list.60}} {{min_after_trans_path_list.61}} {{min_after_trans_path_list.62}} {{min_after_trans_path_list.63}} {{min_after_trans_path_list.64}} {{min_after_trans_path_list.65}} 
+            {{min_after_trans_path_list.66}} {{min_after_trans_path_list.67}} {{min_after_trans_path_list.68}} {{min_after_trans_path_list.69}} {{min_after_trans_path_list.70}} {{min_after_trans_path_list.71}} 
+            - {{min_trans_line}}
             <br>
             ------------------------------------------------------------
             <br>
