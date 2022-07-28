@@ -179,14 +179,29 @@ def home(request):
             print(min_path_time)
             print(min_trans_cnt)
 
-            min_min_trans_cnt = min(min_trans_cnt) # 환승 횟수의 최솟값을 변수에 저장
+            min_trans = 999
+            #min_min_trans_cnt = min(min_trans_cnt) # 환승 횟수의 최솟값을 변수에 저장
             min_min_path_time = min(min_path_time) # 시간의 최솟값을 변수에 저장
             for item in path_obj:
-                min_path_list = item.get('minStatnNm')
-                min_path_msg = item.get('minTravelMsg')
-                min_path_trans_cnt = item.get('minTransferCnt')
-                if min_min_trans_cnt == int(item.get('minTransferCnt')): # 환승 횟수가 최소면,
-                    break
+
+                if int(item.get('minTransferCnt')) < min_trans: # 환승 횟수가 최소면,
+                    t = int(item.get('minTravelTm'))
+                    min_trans = int(item.get('minTransferCnt'))
+                    
+                    min_path_list = item.get('minStatnNm')
+                    min_path_msg = item.get('minTravelMsg')
+                    min_path_trans_cnt = item.get('minTransferCnt')
+                    
+                elif int(item.get('minTransferCnt')) == min_trans:
+                    if int(item.get('minTravelTm')) < t:
+                        min_path_list = item.get('minStatnNm')
+                        min_path_msg = item.get('minTravelMsg')
+                        min_path_trans_cnt = item.get('minTransferCnt')
+                        
+                    
+                    
+
+                    
             
             min_path_list = min_path_list.replace(" ","")
 
@@ -345,12 +360,12 @@ def home(request):
 
 
             ####------------------------------------@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-            # 아래 코드 실행  (1회 환승을 한다면,)
-            if sht_path_trans_cnt == '1':
+            # 아래 코드 실행  (환승을 한다면,)
+            if sht_path_trans_cnt == '1' or '2' or '3':
                 
                 
                 
-                print('\n\n최단 시간 경로 - 환승을 1회 하는 경로입니다.')
+                print('\n\n최단 시간 경로 - 환승을 하는 경로입니다.')
                 
                     
                 #최소 시간 경로 환승경로 지정하기
@@ -440,96 +455,8 @@ def home(request):
                 #환승 이후 경로
                 after_trans_path_list = sht_path_list[index:-1]
 
-            elif sht_path_trans_cnt == '2':
-                print('\n환승 횟수가 2회 입니다. 아래의 코드를 실행합니다.')
-                                    
-                #최소 시간 경로 환승경로 지정하기
-                #sht_path_list
-                print(sht_path_list)
-                path_station_list = []
-                for item in sht_path_list:
-                    for jtem in joined_station_list:
-                        if item == jtem:
-                            path_station_list += jtem
-                            path_station_list += ','
-                            break
-                        
-                
-                joined_path_station_list = " ".join(path_station_list)
-                joined_path_station_list = joined_path_station_list.replace(" ","")
-                joined_path_station_list = joined_path_station_list.split(',')
-                
-                print("이게 무슨경로인가여")        
-                print(joined_path_station_list)
-                # trans_station <--- 환승역임
-                trans_station = joined_path_station_list[-2]
-                print(trans_station)
-                
-                
-                index = sht_path_list.index(trans_station)
-                
-                # 환승역 다음 역
-                next_trans_station = sht_path_list[index+1]
-                
-                ####환승역 기준 다시 도착역 까지 경로
-                #1회 환승 이후 노선 찾기
-                
-                #환승역 노선 찾기
-                trans_api_url = 'http://openAPI.seoul.go.kr:8088/'+key_num+'/json/SearchInfoBySubwayNameService/1/5/'+trans_station
-                trans_response = requests.get(trans_api_url)
-                trans_resdata = trans_response.text
-                trans_obj = json.loads(trans_resdata)
-                try:
-                    trans_obj = trans_obj['SearchInfoBySubwayNameService']
-                    trans_obj = trans_obj['row']
-                except KeyError:
-                    print("keyerror")
-                
-                trans_line_list = []
-                for item in trans_obj:
-                    trans_line_list += item.get('LINE_NUM')
-                    trans_line_list += ','
-                joined_trans_line_list = " ".join(trans_line_list)
-                joined_trans_line_list = joined_trans_line_list.replace(" ","")
-                joined_trans_line_list = joined_trans_line_list.split(',')
-                joined_trans_line_list = [v for v in joined_trans_line_list if v]
-
-                print(joined_trans_line_list)
-                
-                #환승역 다음역 노선 찾기
-                next_trans_api_url = 'http://openAPI.seoul.go.kr:8088/'+key_num+'/json/SearchInfoBySubwayNameService/1/5/'+next_trans_station
-                next_trans_response = requests.get(next_trans_api_url)
-                next_trans_resdata = next_trans_response.text
-                next_trans_obj = json.loads(next_trans_resdata)
-                try:
-                    next_trans_obj = next_trans_obj['SearchInfoBySubwayNameService']
-                    next_trans_obj = next_trans_obj['row']
-                except KeyError:
-                    print("keyerror")
-                
-                next_trans_line_list = []
-                for item in next_trans_obj:
-                    next_trans_line_list += item.get('LINE_NUM')
-                    next_trans_line_list += ','
-                next_joined_trans_line_list = " ".join(next_trans_line_list)
-                next_joined_trans_line_list = next_joined_trans_line_list.replace(" ","")
-                next_joined_trans_line_list = next_joined_trans_line_list.split(',')
-                next_joined_trans_line_list = [v for v in next_joined_trans_line_list if v]
-
-                print(next_joined_trans_line_list)
-                
-                #환승 이후 노선 찾기
-                
-                for item in joined_trans_line_list:
-                    for jtem in next_joined_trans_line_list:
-                        if item == jtem:
-                            trans_line = jtem
-                            break
-                print(trans_line)
-                
-                #환승 이후 경로
-                after_trans_path_list = sht_path_list[index:-1]
-
+                if sht_path_trans_cnt == '2' or '3':
+                    print('환승 횟수가 2회 이상입니다.')
             else:
                 print("환승 횟수가 0회이기 때문에, 환승 코드를 실행하지 않습니다.")
             
