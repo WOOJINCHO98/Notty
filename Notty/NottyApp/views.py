@@ -185,7 +185,7 @@ def home(request):
                 min_path_list = item.get('minStatnNm')
                 min_path_msg = item.get('minTravelMsg')
                 min_path_trans_cnt = item.get('minTransferCnt')
-                if min_min_trans_cnt == int(item.get('minTransferCnt')) and min_min_path_time == int(item.get('minTravelTm')): # 환승 횟수가 최소면,
+                if min_min_trans_cnt == int(item.get('minTransferCnt')): # 환승 횟수가 최소면,
                     break
             
             min_path_list = min_path_list.replace(" ","")
