@@ -73,6 +73,7 @@ min_trans_station2=''
 min_joined_path_station_list2=''
 min_after_trans_path_list2=''
 joined_path_station_list3 = ''
+
 # Create your views here.
 def home(request):
     if request.method == 'POST':
@@ -208,7 +209,7 @@ def home(request):
             sht_path_list = sht_path_list.replace(" ","")
             sht_path_list = sht_path_list.split(',')
 
-
+            print(sht_path_list)
      
             
             #최소 환승 경로 찾기
@@ -262,6 +263,8 @@ def home(request):
             
             #서울시 지하철역 정보 검색 (역명) https://data.seoul.go.kr/dataList/OA-121/S/1/datasetView.do
             # 출발역 찾기
+            if searchword == '서울':
+                searchword = '서울역'
             api_url1 = 'http://openAPI.seoul.go.kr:8088/'+key_num+'/json/SearchInfoBySubwayNameService/1/5/'+searchword
             response = requests.get(api_url1)
             resdata = response.text
@@ -272,7 +275,9 @@ def home(request):
             except KeyError:
                 print("keyerror")
                 
-                
+            
+            if sht_path_list[1] == '서울':
+                sht_path_list[1] = '서울역'
             # 출발역 다음역 찾기 (호선 찾기 위함) (최단시간)
             sht_next_api_url = 'http://openAPI.seoul.go.kr:8088/'+key_num+'/json/SearchInfoBySubwayNameService/1/5/'+sht_path_list[1]
             sht_next_response = requests.get(sht_next_api_url)
@@ -285,6 +290,8 @@ def home(request):
                 print("keyerror")
             
             # 출발역 다음역 찾기 (호선 찾기 위함) (최소환승)
+            if min_path_list[1] == '서울':
+                min_path_list[1] = '서울역'
             min_next_api_url = 'http://openAPI.seoul.go.kr:8088/'+key_num+'/json/SearchInfoBySubwayNameService/1/5/'+min_path_list[1]
             min_next_response = requests.get(min_next_api_url)
             min_next_resdata = min_next_response.text
@@ -296,6 +303,8 @@ def home(request):
                 print("keyerror")
                     
             # 도착역 찾기
+            if destword == '서울':
+                destword = '서울역'
             dest_api_url1 = 'http://openAPI.seoul.go.kr:8088/'+key_num+'/json/SearchInfoBySubwayNameService/1/5/'+destword
             dest_response = requests.get(dest_api_url1)
             dest_resdata = dest_response.text
@@ -372,7 +381,12 @@ def home(request):
             joined_station_list = joined_station_list.replace(" ","")
             joined_station_list = joined_station_list.split(',')
             joined_station_list = [v for v in joined_station_list if v]
-            
+
+            if line == '1' or line == '01호선':
+                temp_index = 0
+                temp_index = joined_station_list.index('서울역')
+                joined_station_list[temp_index] = '서울'
+
 
             ### 출발 호선 기준으로 호선 내 지하철 역 찾기 (최소환승)
             #서울교통공사 노선별 지하철역 정보  http://data.seoul.go.kr/dataList/OA-15442/S/1/datasetView.do
@@ -393,6 +407,10 @@ def home(request):
             min_joined_station_list = min_joined_station_list.split(',')
             min_joined_station_list = [v for v in min_joined_station_list if v]
             
+            if min_line == '1' or min_line == '01호선':
+                temp_index = 0
+                temp_index = min_joined_station_list.index('서울역')
+                min_joined_station_list[temp_index] = '서울'
 
 
 
@@ -452,10 +470,15 @@ def home(request):
                 for item in trans_obj:
                     trans_line_list += item.get('LINE_NUM')
                     trans_line_list += ','
+                    
                 joined_trans_line_list = " ".join(trans_line_list)
                 joined_trans_line_list = joined_trans_line_list.replace(" ","")
                 joined_trans_line_list = joined_trans_line_list.split(',')
                 joined_trans_line_list = [v for v in joined_trans_line_list if v]
+
+                print('\n\n\nSEOUL')
+                print(joined_trans_line_list)
+
 
                 if next_trans_station == '서울':
                     next_trans_station = '서울역'
@@ -522,7 +545,16 @@ def home(request):
                     joined_trans_station_list = joined_trans_station_list.split(',')
                     joined_trans_station_list = [v for v in joined_trans_station_list if v]
                     
+                    temp_index = 0
+                    print(trans_line)
+                    if trans_line == '1' or trans_line == '01호선':
+                        temp_index = 0
+                        temp_index = joined_trans_station_list.index('서울역')
+                        joined_trans_station_list[temp_index] = '서울'
+                        print(temp_index)
 
+                    print(temp_index)
+                    print(joined_trans_station_list)
 
                     #최소 시간 경로 환승경로 지정하기
 
@@ -550,6 +582,8 @@ def home(request):
                     ####환승역 기준 다시 도착역 까지 경로
                     #1회 환승 이후 노선 찾기
                     
+                    if trans_station2 == '서울':
+                        trans_station2 = '서울역'
                     #환승역 노선 찾기
                     trans_api_url2 = 'http://openAPI.seoul.go.kr:8088/'+key_num+'/json/SearchInfoBySubwayNameService/1/5/'+trans_station2
                     trans_response2 = requests.get(trans_api_url2)
@@ -636,6 +670,11 @@ def home(request):
                         joined_trans_station_list3 = joined_trans_station_list3.split(',')
                         joined_trans_station_list3 = [v for v in joined_trans_station_list3 if v]
 
+                        if trans_line2 == '1' or trans_line2 == '01호선':
+                            temp_index = joined_trans_station_list3.index('서울역')
+                            joined_trans_station_list3[temp_index] = '서울'
+
+                        
                         #최소 시간 경로 환승경로 지정하기
 
                         trans_path_station_list3 = []
@@ -661,6 +700,8 @@ def home(request):
                         next_trans_station3 = after_trans_path_list2[index3+1]
                         ####환승역 기준 다시 도착역 까지 경로
                         #1회 환승 이후 노선 찾기
+                        if trans_station3 == '서울':
+                            trans_station3 = '서울역'
                         
                         #환승역 노선 찾기
                         trans_api_url3 = 'http://openAPI.seoul.go.kr:8088/'+key_num+'/json/SearchInfoBySubwayNameService/1/5/'+trans_station3
@@ -682,7 +723,8 @@ def home(request):
                         joined_trans_line_list3 = joined_trans_line_list3.split(',')
                         joined_trans_line_list3 = [v for v in joined_trans_line_list3 if v]
 
-                        
+                        if next_trans_station3 == '서울':
+                            next_trans_station3 = '서울역'
                         #환승역 다음역 노선 찾기
                         next_trans_api_url3 = 'http://openAPI.seoul.go.kr:8088/'+key_num+'/json/SearchInfoBySubwayNameService/1/5/'+next_trans_station3
                         next_trans_response3 = requests.get(next_trans_api_url3)
@@ -751,7 +793,8 @@ def home(request):
                 
                 ####환승역 기준 다시 도착역 까지 경로
                 #1회 환승 이후 노선 찾기
-                
+                if min_trans_station == '서울':
+                    min_trans_station = '서울역'
                 #환승역 노선 찾기
                 trans_api_url = 'http://openAPI.seoul.go.kr:8088/'+key_num+'/json/SearchInfoBySubwayNameService/1/5/'+min_trans_station
                 trans_response = requests.get(trans_api_url)
@@ -772,7 +815,8 @@ def home(request):
                 joined_trans_line_list = joined_trans_line_list.split(',')
                 joined_trans_line_list = [v for v in joined_trans_line_list if v]
 
-                
+                if next_trans_station == '서울':
+                    next_trans_station = '서울역'
                 #환승역 다음역 노선 찾기
                 next_trans_api_url = 'http://openAPI.seoul.go.kr:8088/'+key_num+'/json/SearchInfoBySubwayNameService/1/5/'+next_trans_station
                 next_trans_response = requests.get(next_trans_api_url)
@@ -828,6 +872,10 @@ def home(request):
                     min_joined_trans_station_list = min_joined_trans_station_list.split(',')
                     min_joined_trans_station_list = [v for v in min_joined_trans_station_list if v]
                     
+                    if min_trans_line == '1' or min_trans_line == '01호선':
+                        temp_index = min_joined_trans_station_list.index('서울역')
+                        min_joined_trans_station_list[temp_index] = '서울'
+
 
 
                     #최소 시간 경로 환승경로 지정하기
@@ -857,6 +905,9 @@ def home(request):
                     ####환승역 기준 다시 도착역 까지 경로
                     #1회 환승 이후 노선 찾기
                     
+                    
+                    if min_trans_station2 =='서울':
+                        min_trans_station2 = '서울역'
                     #환승역 노선 찾기
                     min_trans_api_url2 = 'http://openAPI.seoul.go.kr:8088/'+key_num+'/json/SearchInfoBySubwayNameService/1/5/'+min_trans_station2
                     min_trans_response2 = requests.get(min_trans_api_url2)
@@ -877,6 +928,8 @@ def home(request):
                     min_joined_trans_line_list2 = min_joined_trans_line_list2.split(',')
                     min_joined_trans_line_list2 = [v for v in min_joined_trans_line_list2 if v]
 
+                    if min_next_trans_station2 == '서울':
+                        min_next_trans_station2 = '서울역'
                     
                     #환승역 다음역 노선 찾기
                     min_next_trans_api_url2 = 'http://openAPI.seoul.go.kr:8088/'+key_num+'/json/SearchInfoBySubwayNameService/1/5/'+min_next_trans_station2
@@ -933,6 +986,10 @@ def home(request):
                         min_joined_trans_station_list3 = min_joined_trans_station_list3.replace(" ","")
                         min_joined_trans_station_list3 = min_joined_trans_station_list3.split(',')
                         min_joined_trans_station_list3 = [v for v in min_joined_trans_station_list3 if v]
+                        
+                        if min_trans_line2 == '1' or min_trans_line2 == '01호선':
+                            temp_index = min_joined_trans_station_list3.index('서울역')
+                            min_joined_trans_station_list3[temp_index] = '서울'
 
                         #최소 시간 경로 환승경로 지정하기
 
@@ -960,6 +1017,9 @@ def home(request):
                         ####환승역 기준 다시 도착역 까지 경로
                         #1회 환승 이후 노선 찾기
                         
+                        if min_trans_station3 == '서울':
+                            min_trans_station3 = '서울역'
+                        
                         #환승역 노선 찾기
                         min_trans_api_url3 = 'http://openAPI.seoul.go.kr:8088/'+key_num+'/json/SearchInfoBySubwayNameService/1/5/'+min_trans_station3
                         min_trans_response3 = requests.get(min_trans_api_url3)
@@ -980,7 +1040,8 @@ def home(request):
                         min_joined_trans_line_list3 = min_joined_trans_line_list3.split(',')
                         min_joined_trans_line_list3 = [v for v in min_joined_trans_line_list3 if v]
 
-                        
+                        if min_next_trans_station3 == '서울':
+                            min_next_trans_station3 = '서울역'
                         #환승역 다음역 노선 찾기
                         min_next_trans_api_url3 = 'http://openAPI.seoul.go.kr:8088/'+key_num+'/json/SearchInfoBySubwayNameService/1/5/'+min_next_trans_station3
                         min_next_trans_response3 = requests.get(min_next_trans_api_url3)
