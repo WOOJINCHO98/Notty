@@ -38,7 +38,23 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'NottyApp.apps.NottyappConfig',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'django.contrib.sites',
+    'allauth.socialaccount.providers.kakao',
+    'accounts',
 ]
+
+
+SITE_ID = 2
+
+
+
+LOGIN_REDIRECT_URL = 'home'  # 로그인 후 리다이렉트 될 경로
+ACCOUNT_LOGOUT_REDIRECT_URL = 'home'
+ACCOUNT_LOGOUT_ON_GET = True
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

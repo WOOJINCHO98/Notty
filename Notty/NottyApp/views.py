@@ -285,3 +285,7 @@ def detail(request):
 
 def favorite(request):
     return render(request, 'favorite.html')
+
+
+def recommend(request):
+    return render(request, 'recomment.html')

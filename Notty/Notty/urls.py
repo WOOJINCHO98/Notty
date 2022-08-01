@@ -14,8 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 import NottyApp.views
+from accounts import views as accounts_views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,5 +25,10 @@ urlpatterns = [
     path('setting/',NottyApp.views.setting, name='setting'),
     path('detail/',NottyApp.views.detail, name='detail'),
     path('favorite/',NottyApp.views.favorite, name='favorite'),
-
+    path('accounts/',include('allauth.urls')),
+    path('setting/recommend/',NottyApp.views.recommend,name='recommend'),
+    path('login/',accounts_views.login, name='login'),
+    path('logout/',accounts_views.logout, name='logout'),
 ]
+
+
