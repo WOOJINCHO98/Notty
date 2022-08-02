@@ -23,5 +23,7 @@ urlpatterns = [
     path('setting/',NottyApp.views.setting, name='setting'),
     path('detail/',NottyApp.views.detail, name='detail'),
     path('favorite/',NottyApp.views.favorite, name='favorite'),
+    path('sht_path/' ,NottyApp.views.sht_path, name='sht_path'),
+    path('min_path/' ,NottyApp.views.min_path, name='min_path'),
 
 ]
