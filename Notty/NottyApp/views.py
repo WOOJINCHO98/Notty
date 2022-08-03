@@ -278,8 +278,6 @@ def setting(request):
 
 
 def detail(request):
-    
-
     return render(request, 'detail.html')
 
 
@@ -288,4 +286,12 @@ def favorite(request):
 
 
 def recommend(request):
-    return render(request, 'recomment.html')
+    return render(request, 'recommend.html')
+
+
+
+
+
+
+
+    

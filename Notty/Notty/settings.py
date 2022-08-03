@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'django.contrib.sites',
     'allauth.socialaccount.providers.kakao',
-    'accounts',
+    
+    
 ]
 
 
@@ -51,9 +52,17 @@ SITE_ID = 2
 
 
 
-LOGIN_REDIRECT_URL = 'home'  # 로그인 후 리다이렉트 될 경로
-ACCOUNT_LOGOUT_REDIRECT_URL = 'home'
-ACCOUNT_LOGOUT_ON_GET = True
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+
+
+LOGIN_REDIRECT_URL = '/'  # 로그인 후 리다이렉트 될 경로
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+# ACCOUNT_LOGOUT_ON_GET = True
 
 
 MIDDLEWARE = [
