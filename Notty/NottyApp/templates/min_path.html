@@ -15,11 +15,8 @@
 
     <br>
     <p>현재 역 위치 : 
-        {% if line == min_line %}
-        {{line}}
-        {% else %}
-        {{line}} / {{min_line}}
-        {% endif %}
+    {{min_line}}
+
         
     </p>
     <div class="box">
@@ -63,12 +60,12 @@
             {{min_path_list.66}} {{min_path_list.67}} {{min_path_list.68}} {{min_path_list.69}} {{min_path_list.70}} {{min_path_list.71}} 
             <br>
             <br>
+        -->
             {{min_path_msg}}
             <br>
             <br><br>
-            ------------------------------------------------------------
             <br>
-                        -->
+                        
             (최소환승)
             <br>
             {% if min_path_trans_cnt == '0' %}
