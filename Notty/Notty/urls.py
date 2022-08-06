@@ -25,14 +25,14 @@ urlpatterns = [
     path('setting/',NottyApp.views.setting, name='setting'),
     path('detail/',NottyApp.views.detail, name='detail'),
     path('favorite/',NottyApp.views.favorite, name='favorite'),
-    path('',include('allauth.urls')),
+    path('accounts/',include('allauth.urls')),
     path('setting/recommend/',NottyApp.views.recommend,name='recommend'),
+    path('logout/',NottyApp.views.logout,name='logout'),
+    path('favorite_setting/',NottyApp.views.favorite_setting,name='favorite_setting'),
     
     
     
     ]
-#     path('login/',accounts_views.login, name='login'),
-#     path('logout/',accounts_views.logout, name='logout'),
 
 
 

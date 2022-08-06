@@ -1,11 +1,17 @@
 from tracemalloc import start
-from urllib import response
+from urllib import response,request
 from xml.dom.minidom import Attr
 from django.shortcuts import render, redirect
 import requests
 from .forms import RouteForm
 from .models import Route
 import json
+from django.contrib import auth
+from django.contrib.auth.models import User
+
+
+
+
 
 key_num = '646f7a76646a6f7733317842746455'
     
@@ -289,6 +295,13 @@ def recommend(request):
     return render(request, 'recommend.html')
 
 
+def logout(request):
+    auth.logout(request)
+    return redirect('home')
+
+
+def favorite_setting(request):
+    return redirect('favorite')
 
 
 

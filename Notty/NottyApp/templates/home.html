@@ -61,17 +61,37 @@
 
 
     
-
-    
   </body>
   
 
 
+{% if user.is_authenticated %}
 
+
+
+<a href="{% url 'logout' %}">로그아웃</a>
+
+
+
+{% else %}
+아직 로그인 되지 않았습니다<br/>
 {% load socialaccount %}
+<a href="{% provider_login_url 'kakao' %}"> Connect a kakao account </a>
+{% endif %}
 
-<a href="{% provider_login_url 'kakao' %}">Connect a kakao account</a>
-  
+
+
+
+
+<br/>
+
+
+
+
+
+
+
+
 
 
   </div>
