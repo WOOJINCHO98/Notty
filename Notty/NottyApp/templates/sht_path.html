@@ -9,6 +9,9 @@
         <a href='/' style="font-size:40px">X</a>
         <h1 style="display:inline">Notty</h1>
     </div>
+    <!--<meta http-equiv="refresh" content="5">-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body>
 
@@ -60,7 +63,12 @@
                         -->
             {{sht_path_msg}}
             <br><br><br>
-            
+            시간표 : {{sht_joined_time_table_list.0}} {{sht_joined_time_table_list.1}} {{sht_joined_time_table_list.2}}
+            <br>
+
+            <br>
+            실시간 열차 위치 : {{real_time_position}}
+            <br>
             ------------------------------------------------------------
             <br>
             (최단시간)
@@ -219,7 +227,33 @@
 
             <br>
 
+            AJAX TEST
+            <button onClick="window.location.reload()" class="btn btn-outline-success">Page Reloading</button>
+            
+            <script type="text/javascript">
+                $(function() {    
+                    data = $('#text').val();
+                    timer = setInterval( function () {
+                        $.ajax ({
+                            type:'POST',
+                            url:'127.0.0.1:8000/home',  // ----- (1)
+                            data:JSON.stringify(data),
+                            success : function (json) { // ----- (2)
+                                //[받아온 내용을 처리할 부분] // ----- (3)
+                                //[받아온 내용은 변수 html로 전달]
+                                console.log("data pass success",json);
 
+                            },
+                            error : function(xhr,errmsg,err) {
+                            console.log(xhr.status + ": " + xhr.responseText); 
+                            }		
+                        });
+                    }, 10000); // 10초에 한번씩 받아온다.
+                });
+
+
+                
+                </script>
             <br>
  
             ------------------------------------------------------------

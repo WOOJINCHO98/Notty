@@ -1,6 +1,7 @@
 from tracemalloc import start
 from urllib import response
 from xml.dom.minidom import Attr
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 import requests
 from .forms import RouteForm
@@ -8,6 +9,8 @@ from .models import Route
 import json
 import datetime
 import pytz
+import time
+import schedule
 
 
 key_num = '646f7a76646a6f7733317842746455'
@@ -78,6 +81,11 @@ min_after_trans_path_list3 = ''
 min_joined_station_code_list3 = ''
 sht_joined_station_code_list2 = ''
 min_joined_station_code_list2 = ''
+sht_joined_station_code_list1 = ''
+min_joined_station_code_list1 = ''
+real_time_position = ''
+context = {}
+
 # Create your views here.
 def home(request):
     if request.method == 'POST':
@@ -112,14 +120,16 @@ def home(request):
             global min_joined_path_station_list2
             global min_after_trans_path_list2
 
-            global time
+            global time_set
             global sht_joined_station_code_list3
             global min_joined_path_station_list3
             global min_after_trans_path_list3
             global min_joined_station_code_list3
             global sht_joined_station_code_list2
             global min_joined_station_code_list2
-            
+            global sht_joined_station_code_list1
+            global min_joined_station_code_list1
+            global real_time_position
             print("--->>>",request.POST.get('answers'))
             answer = request.POST.get('answers')
             print(answer)
@@ -239,8 +249,8 @@ def home(request):
             
             i=0
             try:
-                for time in path_obj:
-                    path_time[i] = int(time.get('shtTravelTm'))
+                for time_set in path_obj:
+                    path_time[i] = int(time_set.get('shtTravelTm'))
                     i=i+1
             except AttributeError:
                 print("AttributeError")
@@ -564,15 +574,114 @@ def home(request):
                 print('시간표시간표시간표')
                 #print(time_table_obj)
                 break_index = 0
+                time_table_list=[]
+                train_num_list =[]
                 for item in time_table_obj:
-                    if test_time <= item.get('ARRIVETIME'):
+                    if str_time <= item.get('ARRIVETIME'):
                         print(item.get('ARRIVETIME'))
+                        time_table_list += item.get('ARRIVETIME')
+                        time_table_list += ','
+                        train_num_list += item.get('TRAIN_NO')
+                        train_num_list += ','
+                        
                         break_index += 1
                         if break_index == 3:
                             break
-                        
+
                 
+                
+                                                
+                sht_joined_time_table_list = " ".join(time_table_list)
+                sht_joined_time_table_list = sht_joined_time_table_list.replace(" ","")
+                sht_joined_time_table_list = sht_joined_time_table_list.split(',')
+                sht_joined_time_table_list = [v for v in sht_joined_time_table_list if v]
+                
+                
+                
+                
+                print (sht_joined_time_table_list)
+                
+                
+                sht_joined_train_num_list = " ".join(train_num_list)
+                sht_joined_train_num_list = sht_joined_train_num_list.replace(" ","")
+                sht_joined_train_num_list = sht_joined_train_num_list.split(',')
+                sht_joined_train_num_list = [v for v in sht_joined_train_num_list if v]
+                
+                print(sht_joined_train_num_list)
+                
+                
+                
+                # 실시간 지하철 실시간 열차위치정보 http://data.seoul.go.kr/dataList/OA-12601/A/1/datasetView.do
+
+                # 호선 명 처리
+                if line == '01호선':
+                    temp_line = '1호선'
+                elif line == '02호선':
+                    temp_line = '2호선'
+                elif line == '03호선':
+                    temp_line = '3호선'
+                elif line == '04호선':
+                    temp_line = '4호선'
+                elif line == '05호선':
+                    temp_line = '5호선'
+                elif line == '06호선':
+                    temp_line = '6호선'
+                elif line == '07호선':
+                    temp_line = '7호선'
+                elif line == '08호선':
+                    temp_line = '8호선'
+                elif line == '09호선':
+                    temp_line = '9호선'
+                    
+                def RealTimeFunc():
+                    
+                    #1호선 K 로 시작하는 열차번호 처리
+                    for item in sht_joined_train_num_list:
+                        if item.startswith('K'):
+                            item.replace('K','0')
+                            
+                    
+                    
+                    real_time_url = 'http://swopenAPI.seoul.go.kr/api/subway/'+path_key+'/json/realtimePosition/0/100/'+temp_line
+                    real_time_response = requests.get(real_time_url)
+                    real_time_resdata = real_time_response.text
+                    real_time_obj = json.loads(real_time_resdata)
+                    try:
+                        real_time_obj = real_time_obj['realtimePositionList']
+                    except KeyError:
+                        print('KEY ERROR')
+                    
+                    #print(real_time_obj)
+                    
+                    
+                    global real_time_position
+                    global context
+                    for item in real_time_obj:
+                        if sht_joined_train_num_list[0]==item.get('trainNo'):
+                            print(item.get('trainNo'))
+
+                            real_time_position = item.get('statnNm')
+                            print(real_time_position)
+                            
+                            context = {
+                                'result' : real_time_position,
+                            }
+                    
+                    
+                            #return render(request,'sht_path.html',{'real_time_position':real_time_position,'sht_joined_time_table_list':sht_joined_time_table_list,'trans_line3':trans_line3,'joined_path_station_list3':joined_path_station_list3,'after_trans_path_list3':after_trans_path_list3,'sht_path_trans_cnt':sht_path_trans_cnt,'joined_path_station_list2':joined_path_station_list2,'trans_line2':trans_line2,'trans_station2':trans_station2,'after_trans_path_list2':after_trans_path_list2,'trans_line':trans_line,'after_trans_path_list':after_trans_path_list,'joined_path_station_list':joined_path_station_list,'line_obj':line_obj,'line':line,'obj' : obj,'sht_path_msg':sht_path_msg,'path_time':path_time,'sht_path_list':sht_path_list,'path_obj':path_obj,'dest_obj':dest_obj })
+                    
             
+                schedule.every(10).seconds.do(RealTimeFunc)
+                
+                               
+                while 1:
+                    schedule.run_pending()
+                    time.sleep(1)
+                    if real_time_position == destword:
+                        break
+                        
+                        
+                #schedule.every(30).seconds.do(redirect('sht_path'))
                 ####------------------------------------@@@@@@@@@@@@@@@@@@@@@@@@@@@@
                 # 아래 코드 실행  (환승을 한다면,) 최단 시간
                 
@@ -998,7 +1107,7 @@ def home(request):
                 
                             
                         
-                return render(request,'sht_path.html',{'trans_line3':trans_line3,'joined_path_station_list3':joined_path_station_list3,'after_trans_path_list3':after_trans_path_list3,'sht_path_trans_cnt':sht_path_trans_cnt,'joined_path_station_list2':joined_path_station_list2,'trans_line2':trans_line2,'trans_station2':trans_station2,'after_trans_path_list2':after_trans_path_list2,'trans_line':trans_line,'after_trans_path_list':after_trans_path_list,'joined_path_station_list':joined_path_station_list,'line_obj':line_obj,'line':line,'obj' : obj,'sht_path_msg':sht_path_msg,'path_time':path_time,'sht_path_list':sht_path_list,'path_obj':path_obj,'dest_obj':dest_obj })
+                return JsonResponse(context), render(request,'sht_path.html',{'real_time_position':real_time_position,'sht_joined_time_table_list':sht_joined_time_table_list,'trans_line3':trans_line3,'joined_path_station_list3':joined_path_station_list3,'after_trans_path_list3':after_trans_path_list3,'sht_path_trans_cnt':sht_path_trans_cnt,'joined_path_station_list2':joined_path_station_list2,'trans_line2':trans_line2,'trans_station2':trans_station2,'after_trans_path_list2':after_trans_path_list2,'trans_line':trans_line,'after_trans_path_list':after_trans_path_list,'joined_path_station_list':joined_path_station_list,'line_obj':line_obj,'line':line,'obj' : obj,'sht_path_msg':sht_path_msg,'path_time':path_time,'sht_path_list':sht_path_list,'path_obj':path_obj,'dest_obj':dest_obj })
                     
                             
                 
@@ -1064,14 +1173,30 @@ def home(request):
                 print('시간표시간표시간표')
                 #print(time_table_obj)
                 break_index = 0
+                time_table_list=[]
                 for item in time_table_obj:
-                    if test_time <= item.get('ARRIVETIME'):
+                    if str_time <= item.get('ARRIVETIME'):
                         print(item.get('ARRIVETIME'))
+                        time_table_list += item.get('ARRIVETIME')
+                        time_table_list += ','
+                        
                         break_index += 1
                         if break_index == 3:
                             break
-                        
+
                 
+                
+                                                
+                min_joined_time_table_list = " ".join(time_table_list)
+                min_joined_time_table_list = min_joined_time_table_list.replace(" ","")
+                min_joined_time_table_list = min_joined_time_table_list.split(',')
+                min_joined_time_table_list = [v for v in min_joined_time_table_list if v]
+                
+                print (min_joined_time_table_list)
+                
+                
+
+
                 
                 
                 if min_path_trans_cnt == '1' or min_path_trans_cnt == '2' or min_path_trans_cnt == '3':
@@ -1454,7 +1579,7 @@ def home(request):
                 print(min_joined_station_code_list3)
                 
                 
-                return render(request,'min_path.html',{'trans_line3':trans_line3,'joined_path_station_list3':joined_path_station_list3,'after_trans_path_list3':after_trans_path_list3,'min_after_trans_path_list2':min_after_trans_path_list2,'min_joined_path_station_list2':min_joined_path_station_list2,'min_trans_station2':min_trans_station2,'min_trans_line2':min_trans_line2,'min_path_trans_cnt':min_path_trans_cnt,'sht_path_trans_cnt':sht_path_trans_cnt,'joined_path_station_list2':joined_path_station_list2,'trans_line2':trans_line2,'trans_station2':trans_station2,'after_trans_path_list2':after_trans_path_list2,'min_line':min_line,'min_trans_line':min_trans_line,'min_joined_path_station_list':min_joined_path_station_list,'min_after_trans_path_list':min_after_trans_path_list,'trans_line':trans_line,'after_trans_path_list':after_trans_path_list,'joined_path_station_list':joined_path_station_list,'line_obj':line_obj,'line':line,'min_min_path_time':min_min_path_time,'min_path_time':min_path_time,'obj' : obj,'min_path_list':min_path_list,'min_path_msg':min_path_msg,'sht_path_msg':sht_path_msg,'min_sht_path_time':min_sht_path_time,'path_time':path_time,'sht_path_list':sht_path_list,'path_obj':path_obj,'dest_obj':dest_obj })
+                return render(request,'min_path.html',{'min_joined_time_table_list':min_joined_time_table_list,'trans_line3':trans_line3,'joined_path_station_list3':joined_path_station_list3,'after_trans_path_list3':after_trans_path_list3,'min_after_trans_path_list2':min_after_trans_path_list2,'min_joined_path_station_list2':min_joined_path_station_list2,'min_trans_station2':min_trans_station2,'min_trans_line2':min_trans_line2,'min_path_trans_cnt':min_path_trans_cnt,'sht_path_trans_cnt':sht_path_trans_cnt,'joined_path_station_list2':joined_path_station_list2,'trans_line2':trans_line2,'trans_station2':trans_station2,'after_trans_path_list2':after_trans_path_list2,'min_line':min_line,'min_trans_line':min_trans_line,'min_joined_path_station_list':min_joined_path_station_list,'min_after_trans_path_list':min_after_trans_path_list,'trans_line':trans_line,'after_trans_path_list':after_trans_path_list,'joined_path_station_list':joined_path_station_list,'line_obj':line_obj,'line':line,'min_min_path_time':min_min_path_time,'min_path_time':min_path_time,'obj' : obj,'min_path_list':min_path_list,'min_path_msg':min_path_msg,'sht_path_msg':sht_path_msg,'min_sht_path_time':min_sht_path_time,'path_time':path_time,'sht_path_list':sht_path_list,'path_obj':path_obj,'dest_obj':dest_obj })
 
 
 

@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 import NottyApp.views
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',NottyApp.views.home, name='home'),
