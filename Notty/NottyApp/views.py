@@ -1107,7 +1107,7 @@ def home(request):
                 
                             
                         
-                return JsonResponse(context), render(request,'sht_path.html',{'real_time_position':real_time_position,'sht_joined_time_table_list':sht_joined_time_table_list,'trans_line3':trans_line3,'joined_path_station_list3':joined_path_station_list3,'after_trans_path_list3':after_trans_path_list3,'sht_path_trans_cnt':sht_path_trans_cnt,'joined_path_station_list2':joined_path_station_list2,'trans_line2':trans_line2,'trans_station2':trans_station2,'after_trans_path_list2':after_trans_path_list2,'trans_line':trans_line,'after_trans_path_list':after_trans_path_list,'joined_path_station_list':joined_path_station_list,'line_obj':line_obj,'line':line,'obj' : obj,'sht_path_msg':sht_path_msg,'path_time':path_time,'sht_path_list':sht_path_list,'path_obj':path_obj,'dest_obj':dest_obj })
+                return render(request,'sht_path.html',{'real_time_position':real_time_position,'sht_joined_time_table_list':sht_joined_time_table_list,'trans_line3':trans_line3,'joined_path_station_list3':joined_path_station_list3,'after_trans_path_list3':after_trans_path_list3,'sht_path_trans_cnt':sht_path_trans_cnt,'joined_path_station_list2':joined_path_station_list2,'trans_line2':trans_line2,'trans_station2':trans_station2,'after_trans_path_list2':after_trans_path_list2,'trans_line':trans_line,'after_trans_path_list':after_trans_path_list,'joined_path_station_list':joined_path_station_list,'line_obj':line_obj,'line':line,'obj' : obj,'sht_path_msg':sht_path_msg,'path_time':path_time,'sht_path_list':sht_path_list,'path_obj':path_obj,'dest_obj':dest_obj })
                     
                             
                 
