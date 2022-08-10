@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notty</title>
     <div>
-        <a href='/' style="font-size:40px">X</a>
+        <a href='/sht' style="font-size:40px">X</a>
         <h1 style="display:inline">Notty</h1>
     </div>
-    <meta http-equiv="refresh" content= "5 ; url=sht">
+    <meta http-equiv="refresh" content= "5 ; url=/sht_detail">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </head>
@@ -25,22 +25,9 @@
     </p>
     <div class="box">
         <div style="border:1px solid; padding:10px;">     
-            {% for o in obj %}
 
-                {{ o.STATION_NM}}
-                ( 코드 : {{ o.STATION_CD}} )   
-            {% endfor %}
-            
-            {% for o in gps_obj %}
-
-              x : {{ o.x}} y : {{ o.y}}
-            {% endfor %}
-            
             <br>
-            {% for o in dest_obj %}
-                {{ o.STATION_NM}}
-                ( 코드 : {{ o.STATION_CD}} )  
-            {% endfor %}
+
             <br><br>
                         <!--
             최단 시간 경로 표시
@@ -67,6 +54,7 @@
             <br>
 
             <br>
+            실시간 열차 위치 : {{real_time_position}}
             <br>
             ------------------------------------------------------------
             <br>
@@ -225,6 +213,7 @@
             {% endif %}
 
             <br>
+
 
 <!--
             AJAX TEST

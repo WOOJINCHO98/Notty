@@ -13,8 +13,8 @@ import time
 import schedule
 
 
-key_num = '646f7a76646a6f7733317842746455'
-    
+key_num = '6f4d796a726a6f77353772777a4e48'
+path_key = '66794970516a6f7737317a58794163'
 
 
 '''
@@ -57,7 +57,6 @@ min_after_trans_path_list3 : 3회 환승 이후 지하철 경로(최단시간)
 '''
 
 trans_line = ''
-
 min_trans_line = ''
 after_trans_path_list = ''
 after_trans_path_list3 = ''
@@ -84,11 +83,30 @@ min_joined_station_code_list2 = ''
 sht_joined_station_code_list1 = ''
 min_joined_station_code_list1 = ''
 real_time_position = ''
+sht_joined_time_table_list = ''
+sht_path_trans_cnt = ''
+line =''
+line_obj = ''
+obj = ''
+sht_path_msg =''
+path_time = ''
+sht_path_list = ''
+dest_obj = ''
+path_obj = ''
 context = {}
+temp_line = ''
+sht_joined_train_num_list = ''
+min_after_trans_path_list=''
+destword = ''
+real_time_line = ''
+sht_real_path_list =''
+next_station=''
 
 # Create your views here.
 def home(request):
+    global destword
     if request.method == 'POST':
+        print('POST 요청 홈에서')
         form = RouteForm(request.POST)
         searchword = request.POST.get('start')
         destword = request.POST.get('fin')
@@ -99,17 +117,20 @@ def home(request):
             rt.fin = request.POST['fin']
             rt.save()
             
+            global dest_obj
+            global sht_joined_time_table_list
             global min_trans_line
             global after_trans_path_list
             global after_trans_path_list3
             global min_after_trans_path_list
-            min_after_trans_path_list=''
             global min_joined_path_station_list
             global joined_path_station_list
             global joined_path_station_list2
             global joined_path_station_list3
+            global sht_path_list
             global trans_line
-
+            global path_obj
+            global obj
             global trans_line2
             global trans_line3
             global trans_station2
@@ -119,8 +140,9 @@ def home(request):
             global min_trans_station2
             global min_joined_path_station_list2
             global min_after_trans_path_list2
-
+            global sht_path_msg
             global time_set
+            global path_time
             global sht_joined_station_code_list3
             global min_joined_path_station_list3
             global min_after_trans_path_list3
@@ -130,7 +152,14 @@ def home(request):
             global sht_joined_station_code_list1
             global min_joined_station_code_list1
             global real_time_position
+            global sht_path_trans_cnt
+            global line_obj
+            global temp_line
+            global line
+            global sht_joined_train_num_list
+            
             print("--->>>",request.POST.get('answers'))
+            
             answer = request.POST.get('answers')
             print(answer)
             
@@ -234,8 +263,7 @@ def home(request):
             
 
             #지하철 경로 조회 서비스 (최단 시간) https://devming.tistory.com/214 |http://swopenAPI.seoul.go.kr/api/subway/인증Key값/요청데이터형식/OpenAPI 이름(서비스명)/요청 데이터 행 시작번호/요청 데이터 행 끝번호/출발역명/도착역명
-            path_key = '646f7a76646a6f7733317842746455'
-            path_api_url = 'http://swopenAPI.seoul.go.kr/api/subway/'+path_key+'/json/shortestRoute/0/10/'+searchword+'/'+destword
+            path_api_url = 'http://swopenAPI.seoul.go.kr/api/subway/'+key_num+'/json/shortestRoute/0/10/'+searchword+'/'+destword
             path_response = requests.get(path_api_url)
             path_resdata = path_response.text
             path_obj = json.loads(path_resdata)
@@ -350,6 +378,7 @@ def home(request):
                 sht_next_obj = sht_next_obj['row']
             except KeyError:
                 print("keyerror")
+                
 
             
             # 출발역 다음역 찾기 (호선 찾기 위함) (최소환승)
@@ -633,52 +662,17 @@ def home(request):
                 elif line == '09호선':
                     temp_line = '9호선'
                     
-                def RealTimeFunc():
-                    
-                    #1호선 K 로 시작하는 열차번호 처리
-                    for item in sht_joined_train_num_list:
-                        if item.startswith('K'):
-                            item.replace('K','0')
-                            
-                    
-                    
-                    real_time_url = 'http://swopenAPI.seoul.go.kr/api/subway/'+path_key+'/json/realtimePosition/0/100/'+temp_line
-                    real_time_response = requests.get(real_time_url)
-                    real_time_resdata = real_time_response.text
-                    real_time_obj = json.loads(real_time_resdata)
-                    try:
-                        real_time_obj = real_time_obj['realtimePositionList']
-                    except KeyError:
-                        print('KEY ERROR')
-                    
-                    #print(real_time_obj)
-                    
-                    
-                    global real_time_position
-                    global context
-                    for item in real_time_obj:
-                        if sht_joined_train_num_list[0]==item.get('trainNo'):
-                            print(item.get('trainNo'))
-
-                            real_time_position = item.get('statnNm')
-                            print(real_time_position)
-                            
-                            context = {
-                                'result' : real_time_position,
-                            }
-                    
-                    
-                            #return render(request,'sht_path.html',{'real_time_position':real_time_position,'sht_joined_time_table_list':sht_joined_time_table_list,'trans_line3':trans_line3,'joined_path_station_list3':joined_path_station_list3,'after_trans_path_list3':after_trans_path_list3,'sht_path_trans_cnt':sht_path_trans_cnt,'joined_path_station_list2':joined_path_station_list2,'trans_line2':trans_line2,'trans_station2':trans_station2,'after_trans_path_list2':after_trans_path_list2,'trans_line':trans_line,'after_trans_path_list':after_trans_path_list,'joined_path_station_list':joined_path_station_list,'line_obj':line_obj,'line':line,'obj' : obj,'sht_path_msg':sht_path_msg,'path_time':path_time,'sht_path_list':sht_path_list,'path_obj':path_obj,'dest_obj':dest_obj })
+#return render(request,'sht_path.html',{'real_time_position':real_time_position,'sht_joined_time_table_list':sht_joined_time_table_list,'trans_line3':trans_line3,'joined_path_station_list3':joined_path_station_list3,'after_trans_path_list3':after_trans_path_list3,'sht_path_trans_cnt':sht_path_trans_cnt,'joined_path_station_list2':joined_path_station_list2,'trans_line2':trans_line2,'trans_station2':trans_station2,'after_trans_path_list2':after_trans_path_list2,'trans_line':trans_line,'after_trans_path_list':after_trans_path_list,'joined_path_station_list':joined_path_station_list,'line_obj':line_obj,'line':line,'obj' : obj,'sht_path_msg':sht_path_msg,'path_time':path_time,'sht_path_list':sht_path_list,'path_obj':path_obj,'dest_obj':dest_obj })
                     
             
-                schedule.every(10).seconds.do(RealTimeFunc)
+                #schedule.every(10).seconds.do(RealTimeFunc)
                 
                                
-                while 1:
-                    schedule.run_pending()
-                    time.sleep(1)
-                    if real_time_position == destword:
-                        break
+                #while 1:
+                #    schedule.run_pending()
+                #    time.sleep(1)
+                #    if real_time_position == destword:
+                #        break
                         
                         
                 #schedule.every(30).seconds.do(redirect('sht_path'))
@@ -1107,7 +1101,7 @@ def home(request):
                 
                             
                         
-                return render(request,'sht_path.html',{'real_time_position':real_time_position,'sht_joined_time_table_list':sht_joined_time_table_list,'trans_line3':trans_line3,'joined_path_station_list3':joined_path_station_list3,'after_trans_path_list3':after_trans_path_list3,'sht_path_trans_cnt':sht_path_trans_cnt,'joined_path_station_list2':joined_path_station_list2,'trans_line2':trans_line2,'trans_station2':trans_station2,'after_trans_path_list2':after_trans_path_list2,'trans_line':trans_line,'after_trans_path_list':after_trans_path_list,'joined_path_station_list':joined_path_station_list,'line_obj':line_obj,'line':line,'obj' : obj,'sht_path_msg':sht_path_msg,'path_time':path_time,'sht_path_list':sht_path_list,'path_obj':path_obj,'dest_obj':dest_obj })
+                return render(request,'flash.html',{'real_time_position':real_time_position,'sht_joined_time_table_list':sht_joined_time_table_list,'trans_line3':trans_line3,'joined_path_station_list3':joined_path_station_list3,'after_trans_path_list3':after_trans_path_list3,'sht_path_trans_cnt':sht_path_trans_cnt,'joined_path_station_list2':joined_path_station_list2,'trans_line2':trans_line2,'trans_station2':trans_station2,'after_trans_path_list2':after_trans_path_list2,'trans_line':trans_line,'after_trans_path_list':after_trans_path_list,'joined_path_station_list':joined_path_station_list,'line_obj':line_obj,'line':line,'obj' : obj,'sht_path_msg':sht_path_msg,'path_time':path_time,'sht_path_list':sht_path_list,'path_obj':path_obj,'dest_obj':dest_obj })
                     
                             
                 
@@ -1606,14 +1600,14 @@ def home(request):
             
             
             #서울교통공사 실시간 도착 정보
-            api_url3 = 'http://swopenAPI.seoul.go.kr/api/subway/'+key_num+'/json/realtimeStationArrival/0/1/'+destword
+            '''api_url3 = 'http://swopenAPI.seoul.go.kr/api/subway/'+key_num+'/json/realtimeStationArrival/0/1/'+destword
             response2 = requests.get(api_url3)
             findata = response2.text
             finobj = json.loads(findata)
             try:
                 finobj = finobj["realtimeArrivalList"]
             except KeyError:
-                print('keyerror_realtime')
+                print('keyerror_realtime')'''
             #############################################
             #try:
             #except UnboundLocalError:
@@ -1623,27 +1617,201 @@ def home(request):
 
     else:
         form = RouteForm()
+        
+        
+        print('get요청?')
 
-
+        
+        #return render(request,'sht_path.html',{'real_time_position':real_time_position,'sht_joined_time_table_list':sht_joined_time_table_list,'trans_line3':trans_line3,'joined_path_station_list3':joined_path_station_list3,'after_trans_path_list3':after_trans_path_list3,'sht_path_trans_cnt':sht_path_trans_cnt,'joined_path_station_list2':joined_path_station_list2,'trans_line2':trans_line2,'trans_station2':trans_station2,'after_trans_path_list2':after_trans_path_list2,'trans_line':trans_line,'after_trans_path_list':after_trans_path_list,'joined_path_station_list':joined_path_station_list,'line_obj':line_obj,'line':line,'obj' : obj,'sht_path_msg':sht_path_msg,'path_time':path_time,'sht_path_list':sht_path_list,'path_obj':path_obj,'dest_obj':dest_obj })
 
     return render(request, 'home.html', {'form' : form})
 
 
 def setting(request):
     return render(request, 'setting.html')
-
+def favorite(request):
+    return render(request, 'favorite.html')
 
 def detail(request):
-    
-
     return render(request, 'detail.html')
 
 def sht_path(request):
+    if request.method == 'POST':
+        print('POST 요청 sht_path에서')
     return render(request, 'sht_path.html')
 
 def min_path(request):
     return render(request, 'min_path.html')
 
+def flash(request):
+    return render(request, 'flash.html')
 
-def favorite(request):
-    return render(request, 'favorite.html')
+def sht_detail(request):
+    if request.method == 'POST':
+        print('post')
+    else:
+                
+        print('get요청? in sht_detail')
+        
+        form = RouteForm()
+        
+        
+        
+            #1호선 K 로 시작하는 열차번호 처리
+        for item in sht_joined_train_num_list:
+            if item.startswith('K'):
+                item.replace('K','0')
+                
+        
+        
+        real_time_url = 'http://swopenAPI.seoul.go.kr/api/subway/'+path_key+'/json/realtimePosition/0/100/'+temp_line
+        real_time_response = requests.get(real_time_url)
+        real_time_resdata = real_time_response.text
+        real_time_obj = json.loads(real_time_resdata)
+        try:
+            real_time_obj = real_time_obj['realtimePositionList']
+        except KeyError:
+            print('KEY ERROR')
+        
+        #print(real_time_obj)
+        
+        
+        global real_time_position
+        
+        try:
+            for item in real_time_obj:
+                if sht_joined_train_num_list[0]==item.get('trainNo'):
+                    print(item.get('trainNo'))
+
+                    real_time_position = item.get('statnNm')
+                    print(real_time_position)
+                    
+
+        except AttributeError:
+            print('AttributeError')    
+        except IndexError:
+            print('IndexError')
+
+        
+        #return render(request,'sht_path.html',{'real_time_position':real_time_position,'sht_joined_time_table_list':sht_joined_time_table_list,'trans_line3':trans_line3,'joined_path_station_list3':joined_path_station_list3,'after_trans_path_list3':after_trans_path_list3,'sht_path_trans_cnt':sht_path_trans_cnt,'joined_path_station_list2':joined_path_station_list2,'trans_line2':trans_line2,'trans_station2':trans_station2,'after_trans_path_list2':after_trans_path_list2,'trans_line':trans_line,'after_trans_path_list':after_trans_path_list,'joined_path_station_list':joined_path_station_list,'line_obj':line_obj,'line':line,'obj' : obj,'sht_path_msg':sht_path_msg,'path_time':path_time,'sht_path_list':sht_path_list,'path_obj':path_obj,'dest_obj':dest_obj })
+
+    return render(request,'sht_detail.html',{'real_time_position':real_time_position,'sht_joined_time_table_list':sht_joined_time_table_list,'trans_line3':trans_line3,'joined_path_station_list3':joined_path_station_list3,'after_trans_path_list3':after_trans_path_list3,'sht_path_trans_cnt':sht_path_trans_cnt,'joined_path_station_list2':joined_path_station_list2,'trans_line2':trans_line2,'trans_station2':trans_station2,'after_trans_path_list2':after_trans_path_list2,'trans_line':trans_line,'after_trans_path_list':after_trans_path_list,'joined_path_station_list':joined_path_station_list,'line_obj':line_obj,'line':line,'obj' : obj,'sht_path_msg':sht_path_msg,'path_time':path_time,'sht_path_list':sht_path_list,'path_obj':path_obj,'dest_obj':dest_obj })
+
+
+def sht(request):
+    if request.method == 'POST':
+        print('post')
+    else:
+        global real_time_position
+        global destword       
+        global real_time_line
+        global sht_path_list
+        global sht_real_path_list
+        global next_station
+        global sht_path_trans_cnt
+        global sht_path_msg
+        
+        print('get요청? in sht')
+        
+        
+        
+        form = RouteForm()
+    
+                    #1호선 K 로 시작하는 열차번호 처리
+        for item in sht_joined_train_num_list:
+            if item.startswith('K'):
+                item.replace('K','0')
+                
+        
+        #서울시 지하철 실시간 열차 위치정보 http://data.seoul.go.kr/dataList/OA-12601/A/1/datasetView.do
+
+        real_time_url = 'http://swopenAPI.seoul.go.kr/api/subway/'+path_key+'/json/realtimePosition/0/100/'+temp_line
+        real_time_response = requests.get(real_time_url)
+        real_time_resdata = real_time_response.text
+        real_time_obj = json.loads(real_time_resdata)
+        try:
+            real_time_obj = real_time_obj['realtimePositionList']
+        except KeyError:
+            print('KEY ERROR')
+        
+        #print(real_time_obj)
+        
+        
+
+        try:
+            for item in real_time_obj:
+                if sht_joined_train_num_list[0]==item.get('trainNo'):
+                    print(item.get('trainNo'))
+                    real_time_line = item.get('subwayNm')
+                    real_time_position = item.get('statnNm')
+                    print(real_time_position)
+                    
+
+        except AttributeError:
+            print('AttributeError')    
+        except IndexError:
+            print('IndexError')
+        
+        
+        if real_time_position == '공릉(서울산업대입구)':
+            real_time_position = '공릉'
+        
+        print(real_time_position)
+        print(destword)
+        
+        
+        if real_time_position != destword:
+        
+        
+            #현재 역 다음 역 찾기.
+            #지하철 경로 조회 서비스 https://devming.tistory.com/214 |http://swopenAPI.seoul.go.kr/api/subway/인증Key값/요청데이터형식/OpenAPI 이름(서비스명)/요청 데이터 행 시작번호/요청 데이터 행 끝번호/출발역명/도착역명
+            
+
+            
+            path_api_url = 'http://swopenAPI.seoul.go.kr/api/subway/'+key_num+'/json/shortestRoute/0/10/'+real_time_position+'/'+destword
+            path_response = requests.get(path_api_url)
+            path_resdata = path_response.text
+            path_obj = json.loads(path_resdata)
+            try:
+                path_obj = path_obj['shortestRouteList']
+            except KeyError:
+                print("keyerror")
+                
+            #최단 시간 찾기
+            path_time = [9999,9999,9999,9999,9999,9999,9999,9999,9999,9999]
+            
+            i=0
+            try:
+                for time_set in path_obj:
+                    path_time[i] = int(time_set.get('shtTravelTm'))
+                    i=i+1
+            except AttributeError:
+                print("AttributeError")
+            min_sht_path_time = min(path_time)
+            
+            try:
+                for item in path_obj:
+                    sht_real_path_list = item.get('shtStatnNm')
+                    sht_path_msg = item.get('shtTravelMsg')
+                    sht_path_trans_cnt = item.get('shtTransferCnt')
+                    sht_path_time = item.get('shtTravelTm')
+                    if min_sht_path_time == int(item.get('shtTravelTm')):
+                        break
+            except AttributeError:
+                print('AttributeError')   
+            print(sht_real_path_list)     
+            sht_real_path_list = sht_real_path_list.replace(" ","")
+            sht_real_path_list = sht_real_path_list.split(',')        
+            
+            if real_time_position == destword:
+                arrive_tag = 1
+            else:
+                next_station = sht_real_path_list[1]
+        else:
+            print('도착')
+            return render(request,'arrive.html')
+    
+    return render(request,'sht.html',{'next_station':next_station,'real_time_line':real_time_line,'sht_joined_time_table_list':sht_joined_time_table_list,'real_time_position':real_time_position,'destword':destword})
+
+def arrive(request):
+    return render(request, 'arrive.html')
