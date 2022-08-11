@@ -1,8 +1,8 @@
 {% if user.is_authenticated %}
 
 
+<h1>즐겨찾기 페이지</h1>
 
-<!-- <a href="{% url 'favorite_setting' %}">favorite</a> -->
 
 
 
@@ -11,3 +11,8 @@
 {% load socialaccount %}
 <a href="{% provider_login_url 'kakao' %}"> Connect a kakao account </a>
 {% endif %}
+
+
+
+
+

@@ -1,1 +1,66 @@
-<h1>recommend page</h1>
+
+
+
+<!-- 자바 api=	1a8fb4bc758bc826b05c72194e6476ad -->
+
+
+
+<html>
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>카톡 공유</title>
+    <script type="text/JavaScript" src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+    </head>
+    <body>
+        <input type="button" onClick="sendLinkCustom();" value="share with your kakao friends"/>
+        <!-- <input type="button" onClick="sendLinkDefault();" value="Default"/>
+     -->
+    <script type="text/javascript">
+        function sendLinkCustom() {
+            Kakao.init("1a8fb4bc758bc826b05c72194e6476ad");
+            Kakao.Link.sendCustom({
+                templateId: 81091
+            });
+        }
+    </script>
+    
+    <script>
+    try {
+      function sendLinkDefault() {
+        Kakao.init('1a8fb4bc758bc826b05c72194e6476ad')
+        Kakao.Link.sendDefault({
+          objectType: 'feed',
+          content: {
+            title: 'Notty',
+            description: '실시간 지하철 위치정보 서비스를 위한 웹사이트',
+            imageUrl:
+              'http://k.kakaocdn.net/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png',
+            link: {
+              mobileWebUrl: 'https://developers.kakao.com',
+              webUrl: 'https://developers.kakao.com',
+            },
+          },
+          buttons: [
+            {
+              title: '웹으로 보기',
+              link: {
+                mobileWebUrl: 'https://developers.kakao.com',
+                webUrl: 'https://developers.kakao.com',
+              },
+            },
+            // {
+            //   title: '앱으로 보기',
+            //   link: {
+            //     mobileWebUrl: 'https://developers.kakao.com',
+            //     webUrl: 'https://developers.kakao.com',
+            //   },
+            // },
+          ],
+        })
+      }
+    ; window.kakaoDemoCallback && window.kakaoDemoCallback() }
+    catch(e) { window.kakaoDemoException && window.kakaoDemoException(e) }
+    </script>
+       
+    </body>
+    </html>

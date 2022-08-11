@@ -1,6 +1,11 @@
-<a href="recommend">kakao recommend</a>
+<a href="recommend">카카오 공유하기</a>
 
 
 
+<a href="mailto:superman@test.com">의견보내기</a>
 
 
+
+{% if user.is_authenticated %}
+<a href="{% url 'logout' %}">로그아웃</a>
+{% endif %}
