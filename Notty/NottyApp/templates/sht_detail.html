@@ -19,10 +19,33 @@
     <br>
     <p>현재 역 위치 : 
 
-        {{line}}
+    <!--현재 호선 구분하는 코드 입니다.-->
+    {% if real_time_line == '1호선'%}
+    1호선
+    {% elif real_time_line == '2호선'%}
+    2호선
+    {% elif real_time_line == '3호선'%}
+    3호선
+    {% elif real_time_line == '4호선'%}
+    4호선
+    {% elif real_time_line == '5호선'%}
+    5호선
+    {% elif real_time_line == '6호선'%}
+    6호선
+    {% elif real_time_line == '7호선'%}
+    7호선
+    {% elif real_time_line == '8호선'%}
+    8호선
+    {% elif real_time_line == '9호선'%}
+    9호선
+    {% else %}
+    {% endif %}
 
         
     </p>
+
+    {{sht_real_path_list}}
+
     <div class="box">
         <div style="border:1px solid; padding:10px;">     
 
@@ -50,7 +73,6 @@
                         -->
             {{sht_path_msg}}
             <br><br><br>
-            시간표 : {{sht_joined_time_table_list.0}} {{sht_joined_time_table_list.1}} {{sht_joined_time_table_list.2}}
             <br>
 
             <br>

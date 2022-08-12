@@ -6,8 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notty</title>
     <div>
-        <a href='/' style="font-size:40px">X</a>
+        <a href='/real_min' style="font-size:40px">X</a>
+
+        
         <h1 style="display:inline">Notty</h1>
+
+        <meta http-equiv="refresh" content= "5 ; url=/min_detail">
+
     </div>
 </head>
 <body>
@@ -15,7 +20,29 @@
 
     <br>
     <p>현재 역 위치 : 
-    {{min_line}}
+    <!--현재 호선 구분하는 코드 입니다.-->
+    {% if real_time_line == '1호선'%}
+    1호선
+    {% elif real_time_line == '2호선'%}
+    2호선
+    {% elif real_time_line == '3호선'%}
+    3호선
+    {% elif real_time_line == '4호선'%}
+    4호선
+    {% elif real_time_line == '5호선'%}
+    5호선
+    {% elif real_time_line == '6호선'%}
+    6호선
+    {% elif real_time_line == '7호선'%}
+    7호선
+    {% elif real_time_line == '8호선'%}
+    8호선
+    {% elif real_time_line == '9호선'%}
+    9호선
+    {% else %}
+    {% endif %}
+
+    {{sht_real_path_list}}
 
         
     </p>
@@ -38,6 +65,8 @@
                 ( 코드 : {{ o.STATION_CD}} )  
             {% endfor %}
             <br><br>
+            실시간 열차 위치 : {{real_time_position}}
+            <br>
             ------------------------------------------------------------
             <br>
             <br><br><br>
@@ -65,7 +94,6 @@
             <br>
             <br><br>
 
-            시간표 : {{min_joined_time_table_list.0}} {{min_joined_time_table_list.1}} {{min_joined_time_table_list.2}}
 
 
             <br>

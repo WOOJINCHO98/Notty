@@ -10,17 +10,17 @@
         <h1 style="display:inline">Notty</h1>
         <a href='/setting/' style="font-size:40px">=</a>
     </div>
-    <meta http-equiv="refresh" content= "35 ; url=/sht">
+    <meta http-equiv="refresh" content= "35 ; url=/real_min">
 
 </head>
 <body>
     <br>
-    <form action="/sht/" method="GET">
+    <form action="/real_min/" method="GET">
         <select name="time_table" id="time_selected" onchange="this.form.submit()">
             <option value="">시간 선택</option>
-            <option value="first">{{sht_joined_time_table_list.0}}</option>
-            <option value="second">{{sht_joined_time_table_list.1}}</option>
-            <option value="third">{{sht_joined_time_table_list.2}}</option>
+            <option value="first">{{min_joined_time_table_list.0}}</option>
+            <option value="second">{{min_joined_time_table_list.1}}</option>
+            <option value="third">{{min_joined_time_table_list.2}}</option>
         </select>
         </form>
     <br>
@@ -48,7 +48,7 @@
     {% endif %}
     
     <br>
-    <a href='/sht_detail'>상세 정보</a>
+    <a href='/min_detail'>상세 정보</a>
     <br>
     <br>
     열차 현 위치 : {{real_time_position}}
