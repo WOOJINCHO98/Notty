@@ -115,14 +115,20 @@ min_path_msg =''
 min_joined_train_num_list = ''
 min_path_list = ''
 min_joined_time_table_list =''
+user_token=''
+resgistration = []
 # Create your views here.
 def home(request):
     global destword
+    global user_token
     if request.method == 'POST':
         print('POST 요청 홈에서')
         form = RouteForm(request.POST)
         searchword = request.POST.get('start')
         destword = request.POST.get('fin')
+
+        user_token = request.POST.get('user_token')
+
         if form.is_valid():
             #데이터 저장
             rt = Route()
@@ -616,6 +622,9 @@ def home(request):
                     
                     
                 #########################################
+                print(week_tag)
+                print(up_down_tag)
+                
                 #서울시 역코드로 지하철역별 열차 시간표 정보 검색 https://data.seoul.go.kr/dataList/OA-101/A/1/datasetView.do
                 time_table_url = 'http://openAPI.seoul.go.kr:8088/'+key_num+'/json/SearchSTNTimeTableByIDService/1/300/'+sht_start_code+'/'+week_tag+'/'+up_down_tag
                 time_table_response = requests.get((time_table_url))
@@ -1682,7 +1691,8 @@ def home(request):
         form = RouteForm()
         
         
-        print('get요청?')
+        print('홈에서 get요청?')
+        print(request.GET.get('data'))
 
         
         #return render(request,'sht_path.html',{'real_time_position':real_time_position,'sht_joined_time_table_list':sht_joined_time_table_list,'trans_line3':trans_line3,'joined_path_station_list3':joined_path_station_list3,'after_trans_path_list3':after_trans_path_list3,'sht_path_trans_cnt':sht_path_trans_cnt,'joined_path_station_list2':joined_path_station_list2,'trans_line2':trans_line2,'trans_station2':trans_station2,'after_trans_path_list2':after_trans_path_list2,'trans_line':trans_line,'after_trans_path_list':after_trans_path_list,'joined_path_station_list':joined_path_station_list,'line_obj':line_obj,'sht_line':sht_line,'obj' : obj,'sht_path_msg':sht_path_msg,'path_time':path_time,'sht_path_list':sht_path_list,'path_obj':path_obj,'dest_obj':dest_obj })
@@ -1830,6 +1840,8 @@ def sht(request):
         global last_time
         global found
         global time_tag
+        global user_token
+        global resgistration
         arrive_tag = 0
         time_tag = 0
         left_tag = 0
@@ -1848,7 +1860,7 @@ def sht(request):
         #서울시 지하철 실시간 열차 위치정보 http://data.seoul.go.kr/dataList/OA-12601/A/1/datasetView.do
 
         # 선택 시간 받아오기 GET 요청
-        selected_time = request.GET.get('time_table')
+        selected_time = request.GET.get('time_drop_list')
         print('선택된 시간',selected_time)
         if selected_time == 'first':
             time_tag = 0
@@ -1874,7 +1886,7 @@ def sht(request):
         #print(real_time_obj)
         
         
-
+        print(sht_joined_train_num_list)
         try:
             for item in real_time_obj:
 
@@ -1953,8 +1965,8 @@ def sht(request):
                 found = sht_real_path_list.index(sht_path_list[0])
             except ValueError:
                 print('valueError')
-            #print(sht_real_path_list[found])
-            #print(sht_real_path_list[found-2])
+                found = 0
+
             if real_time_position == sht_real_path_list[found]:
                 left_tag = 1
             elif real_time_position == sht_real_path_list[found-1]:
@@ -1963,17 +1975,33 @@ def sht(request):
                 left_tag = 3
             elif real_time_position == sht_real_path_list[found-3]:
                 left_tag = 4
-            elif real_time_position == sht_real_path_list[-2]:
+            else:
+                print('출발 태그 예외')
+                left_tag = 99
+                
+            resgistration  = [user_token]
+            
+            print(sht_real_path_list)
+            print(real_time_position)
+            if real_time_position == sht_real_path_list[-2]:
                 arrive_tag = 1
+                send_notification(resgistration , 'Notty 알림' , '목적지에 도착했습니다.')
                 print('도착역 도착')
             elif real_time_position == sht_real_path_list[-3]:
+                send_notification(resgistration , 'Notty 알림' , '전 역에 도착했습니다. 내릴 준비 해주세요.')
                 arrive_tag = 2
                 print('도착역 전 역 도착')
             elif real_time_position == sht_real_path_list[-4]:
+                send_notification(resgistration , 'Notty 알림' , '전전 역에 도착했습니다. 내릴 준비 해주세요.')
                 arrive_tag = 3
                 print('도착역 전전역 도착')
             else: 
                 print("도착 태그 예외")
+                
+            if arrive_tag == 1:
+                print('도착')
+                return render(request,'arrive.html')
+            
             #실시간 다음역 지정
             real_next_station = sht_real_path_list[1]
         else:
@@ -2023,7 +2051,7 @@ def real_min(request):
         #서울시 지하철 실시간 열차 위치정보 http://data.seoul.go.kr/dataList/OA-12601/A/1/datasetView.do
 
         # 선택 시간 받아오기 GET 요청
-        selected_time = request.GET.get('time_table')
+        selected_time = request.GET.get('time_drop_list')
         print('선택된 시간',selected_time)
         if selected_time == 'first':
             time_tag = 0
@@ -2125,8 +2153,8 @@ def real_min(request):
                 found = min_real_path_list.index(min_path_list[0])
             except ValueError:
                 print('valueError')
-            #print(min_real_path_list[found])
-            #print(min_real_path_list[found-2])
+                found = 0
+
             if real_time_position == min_real_path_list[found]:
                 left_tag = 1
             elif real_time_position == min_real_path_list[found-1]:
@@ -2135,7 +2163,11 @@ def real_min(request):
                 left_tag = 3
             elif real_time_position == min_real_path_list[found-3]:
                 left_tag = 4
-            elif real_time_position == min_real_path_list[-2]:
+            else:
+                print('출발 태그 예외')
+                left_tag = 99
+            
+            if real_time_position == min_real_path_list[-2]:
                 arrive_tag = 1
                 print('도착역 도착')
             elif real_time_position == min_real_path_list[-3]:
@@ -2157,6 +2189,8 @@ def real_min(request):
 
 
 def arrive(request):
+    
+
     return render(request, 'arrive.html')
 
 
@@ -2183,15 +2217,19 @@ def send_notification(registration_ids , message_title , message_desc):
     }
 
     result = requests.post(url,  data=json.dumps(payload), headers=headers )
-    print(result.json())
+    #print(result.json())
 
 
 
 
 
 def send(request):
-    resgistration  = ['dV6cEZaPqESTIx6cnCYWCX:APA91bEX8KsH-E8k3BD5nhXuPOuul2kLwuAiV-dgnD3m86VRuLnAWDObNPzoO5wum6uo9NqMVKCeGkv787Rnu2wakCHQT80FB4biXOaO5Gxs7foHIc75R1SCx2zQa4qWQ3mnWYCFZZLG']
-    send_notification(resgistration , 'asdf' , 'qwer')
+    global user_token
+
+    resgistration  = [user_token]
+    time.sleep(1)
+    
+    send_notification(resgistration , 'Code Keen added a new video' , 'Code Keen new video alert')
     return HttpResponse("sent")
 
 
@@ -2203,7 +2241,7 @@ def showFirebaseJS(request):
          'var firebaseConfig = {' \
          '        apiKey: "AIzaSyB7kDt6u_8oVS_IjV_dYq8GmthV8x9n3kU",' \
          '        authDomain: "notty-34ee7.firebaseapp.com",' \
-         '        databaseURL: "",' \
+         '        databaseURL: "https://notty-34ee7.firebaseio.com",' \
          '        projectId: "notty-34ee7",' \
          '        storageBucket: "notty-34ee7.appspot.com",' \
          '        messagingSenderId: "260740644068",' \
@@ -2213,6 +2251,31 @@ def showFirebaseJS(request):
          'firebase.initializeApp(firebaseConfig);' \
          'const messaging=firebase.messaging();' \
          'messaging.setBackgroundMessageHandler(function (payload) {' \
+         '    console.log(payload);' \
+         '    const notification=JSON.parse(payload);' \
+         '    const notificationOption={' \
+         '        body:notification.body,' \
+         '        icon:notification.icon' \
+         '    };' \
+         '    return self.registration.showNotification(payload.notification.title,notificationOption);' \
+         '});'
+         
+def showFirebaseJS2(request):
+    data='importScripts("https://www.gstatic.com/firebasejs/8.2.0/firebase-app.js");' \
+         'importScripts("https://www.gstatic.com/firebasejs/8.2.0/firebase-messaging.js"); ' \
+         'var firebaseConfig = {' \
+         '        apiKey: "AIzaSyB7kDt6u_8oVS_IjV_dYq8GmthV8x9n3kU",' \
+         '        authDomain: "notty-34ee7.firebaseapp.com",' \
+         '        databaseURL: "https://notty-34ee7.firebaseio.com",' \
+         '        projectId: "notty-34ee7",' \
+         '        storageBucket: "notty-34ee7.appspot.com",' \
+         '        messagingSenderId: "260740644068",' \
+         '        appId: "1:260740644068:web:2ede7cab29eae48e9740f1",' \
+         '        measurementId: "G-3VT1R1RFGL"' \
+         ' };' \
+         'firebase.initializeApp(firebaseConfig);' \
+         'const messaging=firebase.messaging();' \
+         'messaging.onMessage(function (payload) {' \
          '    console.log(payload);' \
          '    const notification=JSON.parse(payload);' \
          '    const notificationOption={' \

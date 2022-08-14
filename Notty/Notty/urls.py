@@ -35,6 +35,7 @@ urlpatterns = [
     path('arrive/',NottyApp.views.arrive, name='arrive'),
     
     path('firebase-messaging-sw.js', showFirebaseJS, name="show_firebase_js"),
+    path('firebase-messaging-sw.js', showFirebaseJS2, name="show_firebase_js2"),
     path('send/' , send),
 
     
