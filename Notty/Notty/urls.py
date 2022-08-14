@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 import NottyApp.views
+from NottyApp.views import *
 
 
 urlpatterns = [
@@ -32,4 +33,9 @@ urlpatterns = [
 
     path('flash/',NottyApp.views.flash, name='flash'),
     path('arrive/',NottyApp.views.arrive, name='arrive'),
+    
+    path('firebase-messaging-sw.js', showFirebaseJS, name="show_firebase_js"),
+    path('send/' , send),
+
+    
 ]
