@@ -52,9 +52,26 @@ min_joined_path_station_list3 : 2회 환승 역에서 3회 환승 전 까지의 
 min_after_trans_path_list3 : 3회 환승 이후 지하철 경로(최단시간)
 '''
 trans_station_code = ''
+trans_station_code2 = ''
+trans_station_code3 = ''
+min_trans_station_code = ''
 up_down_tag = ''
+sht_up_down_tag = ''
+sht_up_down_tag2 = ''
+sht_up_down_tag = ''
+min_up_down_tag = ''
 arrival_time_min = ''
+arrival_time2_min = ''
+arrival_time3_min = ''
 arrival_time_hour = ''
+arrival_time2_hour = ''
+arrival_time3_hour = ''
+trans_arrival_time = ''
+trans_arrival_time2 = ''
+trans_arrival_time3 = ''
+min_trans_arrival_time = ''
+min_trans_arrival_time2 = ''
+min_trans_arrival_time3 = ''
 trans_line = ''
 
 min_trans_line = ''
@@ -96,9 +113,26 @@ def home(request):
             rt.save()
 
             global up_down_tag
+            global sht_up_down_tag
+            global sht_up_down_tag2
+            global sht_up_down_tag3
+            global min_up_down_tag
             global trans_station_code
+            global trans_station_code2
+            global trans_station_code3
+            global min_trans_station_code
             global arrival_time_min
+            global arrival_time2_min
+            global arrival_time3_min
             global arrival_time_hour
+            global arrival_time2_hour
+            global arrival_time3_hour
+            global trans_arrival_time
+            global trans_arrival_time2
+            global trans_arrival_time3
+            global min_trans_arrival_time
+            global min_trans_arrival_time2
+            global min_trans_arrival_time3
             global min_trans_line
             global after_trans_path_list
             global after_trans_path_list3
@@ -544,7 +578,7 @@ def home(request):
                 print(sht_line)
 
                 # 최단시간 상행 하행 여부
-                if sht_line == '03호선' or sht_line == '04호선' or sht_line == '07호선' or sht_line == '08호선':
+                if sht_line == '03호선' or sht_line == '04호선' or sht_line == '07호선' or sht_line == '08호선' or sht_line == '수인분당선' or sht_line == '신분당선' or sht_line == '공항철도':
                     if int(sht_start_code) - int(sht_next_code) > 0:
                         up_down_tag = '1'
                     else:
@@ -712,6 +746,7 @@ def home(request):
                     print('환승 1 회 이후 최단 시간')
                     print(after_trans_path_list)
                     print(sht_joined_station_code_list1)
+                    trans_next_station_code = sht_joined_station_code_list1[1]
 
                     # 환승하는 경우 환승역 열차 도착시간 구하기
 
@@ -734,9 +769,20 @@ def home(request):
                     print(trans_station)
                     print(trans_station_code)
 
+                    if trans_line == '03호선' or trans_line == '04호선' or trans_line == '07호선' or trans_line == '08호선' or trans_line == '수인분당선' or trans_line == '신분당선' or trans_line == '공항철도':
+                        if int(trans_station_code) - int(trans_next_station_code) > 0:
+                            sht_up_down_tag = '1'
+                        else:
+                            sht_up_down_tag = '2'
+                    elif trans_line == '01호선' or trans_line == '02호선' or trans_line == '05호선' or trans_line == '06호선' or trans_line == '09호선':
+                        if int(trans_station_code) - int(trans_next_station_code) > 0:
+                            sht_up_down_tag = '2'
+                        else:
+                            sht_up_down_tag = '1'
+
                     time_table_trans_url = 'http://openAPI.seoul.go.kr:8088/'+key_num + \
                         '/json/SearchSTNTimeTableByIDService/1/300/' + \
-                        trans_station_code+'/'+week_tag+'/'+up_down_tag
+                        trans_station_code+'/'+week_tag+'/'+sht_up_down_tag
                     time_table_trans_response = requests.get(
                         (time_table_trans_url))
                     time_table_trans_resdata = time_table_trans_response.text
@@ -770,8 +816,12 @@ def home(request):
                         arrival_time_min = int(
                             arrival_time[3:5]) + int(trans_path_time[0:]) - 60
                         arrival_time_hour = int(arrival_time[:2]) + 1
-                        trans_arrival_time = str(arrival_time_hour) + ':' + \
-                            str(arrival_time_min) + ':' + arrival_time[6:]
+                        if int(arrival_time_min) < 10:
+                            trans_arrival_time = str(
+                                arrival_time_hour) + ':0' + str(arrival_time_min) + ':' + arrival_time[6:]
+                        else:
+                            trans_arrival_time = str(arrival_time_hour) + ':' + \
+                                str(arrival_time_min) + ':' + arrival_time[6:]
 
                     print(trans_arrival_time)
 
@@ -783,6 +833,15 @@ def home(request):
                             break_index += 1
                             if break_index == 3:
                                 break
+
+                    break_index_index = 0
+                    for item in time_table_trans_obj:
+                        if trans_arrival_time <= item.get('ARRIVETIME'):
+                            arrival2_time = item.get('ARRIVETIME')
+                            break_index_index += 1
+                            if break_index_index == 1:
+                                break
+
                     # --------------------------------------------------------
 
                     if sht_path_trans_cnt == '2' or sht_path_trans_cnt == '3':
@@ -935,9 +994,110 @@ def home(request):
                             ',')
                         sht_joined_station_code_list2 = [
                             v for v in sht_joined_station_code_list2 if v]
+
+                        trans_next_station_code2 = sht_station_code_list[1]
+                        print(trans_next_station_code2)
+
                         print('환승 2 회 이후 최단 시간')
                         print(after_trans_path_list2)
                         print(sht_joined_station_code_list2)
+
+                        # 환승 2회시 환승역 출발시간 구하기
+                        trans_arrival2_api_url = 'http://openapi.seoul.go.kr:8088/' + \
+                            key_num+'/json/SearchInfoBySubwayNameService/1/5/'+trans_station2+'/'
+                        trans_arrival2_response = requests.get(
+                            trans_arrival2_api_url)
+                        trans_arrival2_resdata = trans_arrival2_response.text
+                        trans_arrival2_obj = json.loads(trans_arrival2_resdata)
+                        trans_arrival2_obj = trans_arrival2_obj['SearchInfoBySubwayNameService']
+                        trans_arrival2_obj = trans_arrival2_obj['row']
+
+                        print(trans_arrival2_obj)
+
+                        for item in trans_arrival2_obj:
+                            if trans_line2 == item.get('LINE_NUM'):
+                                trans_station_code2 = item.get('STATION_CD')
+
+                        print(trans_station2)
+                        print(trans_station_code2)
+
+                        if trans_line2 == '03호선' or trans_line2 == '04호선' or trans_line2 == '07호선' or trans_line2 == '08호선' or trans_line2 == '수인분당선' or trans_line2 == '신분당선' or trans_line2 == '공항철도':
+                            if int(trans_station_code2) - int(trans_next_station_code2) > 0:
+                                sht_up_down_tag2 = '1'
+                            else:
+                                sht_up_down_tag2 = '2'
+                        elif trans_line2 == '01호선' or trans_line2 == '02호선' or trans_line2 == '05호선' or trans_line2 == '06호선' or trans_line2 == '09호선':
+                            if int(trans_station_code2) - int(trans_next_station_code2) > 0:
+                                sht_up_down_tag2 = '2'
+                            else:
+                                sht_up_down_tag2 = '1'
+
+                        time_table_trans2_url = 'http://openAPI.seoul.go.kr:8088/'+key_num + \
+                            '/json/SearchSTNTimeTableByIDService/1/300/' + \
+                            trans_station_code2+'/'+week_tag+'/'+sht_up_down_tag2
+                        time_table_trans2_response = requests.get(
+                            (time_table_trans2_url))
+                        time_table_trans2_resdata = time_table_trans2_response.text
+                        time_table_trans2_obj = json.loads(
+                            time_table_trans2_resdata)
+                        time_table_trans2_obj = time_table_trans2_obj['SearchSTNTimeTableByIDService']
+                        time_table_trans2_obj = time_table_trans2_obj['row']
+
+                        trans_path2_api_url = 'http://swopenAPI.seoul.go.kr/api/subway/' + \
+                            path_key+'/json/shortestRoute/0/10/'+trans_station+'/'+trans_station2
+                        trans_path2_response = requests.get(
+                            trans_path2_api_url)
+                        trans_path2_resdata = trans_path2_response.text
+                        trans_path2_obj = json.loads(trans_path2_resdata)
+                        try:
+                            trans_path2_obj = trans_path2_obj['shortestRouteList']
+                        except KeyError:
+                            print("keyerror")
+
+                        for item in trans_path2_obj:
+                            trans_path2_time = item.get('shtTravelTm')
+
+                        print(trans_path2_time)
+
+                        arrival_time2_min = int(
+                            arrival2_time[3:5]) + int(trans_path2_time[0:])
+                        if arrival_time2_min < 60:
+                            arrival_time2_min = int(
+                                arrival2_time[3:5]) + int(trans_path2_time[0:])
+                            trans_arrival_time2 = arrival2_time[:2] + ':' + \
+                                str(arrival_time2_min) + \
+                                ':' + arrival2_time[6:]
+                        if arrival_time2_min >= 60:
+                            arrival_time2_min = int(
+                                arrival2_time[3:5]) + int(trans_path2_time[0:]) - 60
+                            arrival_time2_hour = int(arrival2_time[:2]) + 1
+                            if int(arrival_time2_min) < 10:
+                                trans_arrival_time2 = str(
+                                    arrival_time2_hour) + ':0' + str(arrival_time2_min) + ':' + arrival2_time[6:]
+                            else:
+                                trans_arrival_time2 = str(arrival_time2_hour) + ':' + \
+                                    str(arrival_time2_min) + \
+                                    ':' + arrival2_time[6:]
+
+                        print(trans_path2_time)
+                        print(trans_arrival_time2)
+
+                        print('환승역(2) 시간표')
+                        break_index2 = 0
+                        for item in time_table_trans2_obj:
+                            if trans_arrival_time2 < item.get('ARRIVETIME'):
+                                print(item.get('ARRIVETIME'))
+                                break_index2 += 1
+                                if break_index2 == 3:
+                                    break
+
+                        break_index_index2 = 0
+                        for item in time_table_trans2_obj:
+                            if trans_arrival_time2 <= item.get('ARRIVETIME'):
+                                arrival3_time = item.get('ARRIVETIME')
+                                break_index_index2 += 1
+                                if break_index_index2 == 1:
+                                    break
 
                         if sht_path_trans_cnt == '3':
                             print('환승 횟수가 3회 입니다.')
@@ -1092,9 +1252,101 @@ def home(request):
                                 ',')
                             sht_joined_station_code_list3 = [
                                 v for v in sht_joined_station_code_list3 if v]
+
+                            trans_next_station_code3 = sht_joined_station_code_list3[1]
+
                             print('환승 3 회 이후 최단 시간')
                             print(after_trans_path_list3)
                             print(sht_joined_station_code_list3)
+
+                            # 환승 3회시 환승역 출발시간 구하기
+                            trans_arrival3_api_url = 'http://openapi.seoul.go.kr:8088/' + \
+                                key_num+'/json/SearchInfoBySubwayNameService/1/5/'+trans_station3+'/'
+                            trans_arrival3_response = requests.get(
+                                trans_arrival3_api_url)
+                            trans_arrival3_resdata = trans_arrival3_response.text
+                            trans_arrival3_obj = json.loads(
+                                trans_arrival3_resdata)
+                            trans_arrival3_obj = trans_arrival3_obj['SearchInfoBySubwayNameService']
+                            trans_arrival3_obj = trans_arrival3_obj['row']
+
+                            print(trans_arrival3_obj)
+
+                            for item in trans_arrival3_obj:
+                                if trans_line3 == item.get('LINE_NUM'):
+                                    trans_station_code3 = item.get(
+                                        'STATION_CD')
+
+                            print(trans_station3)
+                            print(trans_station_code3)
+
+                            if trans_line3 == '03호선' or trans_line3 == '04호선' or trans_line3 == '07호선' or trans_line3 == '08호선' or trans_line3 == '수인분당선' or trans_line3 == '신분당선' or trans_line3 == '공항철도':
+                                if int(trans_station_code3) - int(trans_next_station_code3) > 0:
+                                    sht_up_down_tag3 = '1'
+                                else:
+                                    sht_up_down_tag3 = '2'
+                            elif trans_line3 == '01호선' or trans_line3 == '02호선' or trans_line3 == '05호선' or trans_line3 == '06호선' or trans_line3 == '09호선':
+                                if int(trans_station_code3) - int(trans_next_station_code3) > 0:
+                                    sht_up_down_tag3 = '2'
+                                else:
+                                    sht_up_down_tag3 = '1'
+
+                            time_table_trans3_url = 'http://openAPI.seoul.go.kr:8088/'+key_num + \
+                                '/json/SearchSTNTimeTableByIDService/1/300/' + \
+                                trans_station_code3+'/'+week_tag+'/'+sht_up_down_tag3
+                            time_table_trans3_response = requests.get(
+                                (time_table_trans3_url))
+                            time_table_trans3_resdata = time_table_trans3_response.text
+                            time_table_trans3_obj = json.loads(
+                                time_table_trans3_resdata)
+                            time_table_trans3_obj = time_table_trans3_obj['SearchSTNTimeTableByIDService']
+                            time_table_trans3_obj = time_table_trans3_obj['row']
+
+                            trans_path3_api_url = 'http://swopenAPI.seoul.go.kr/api/subway/' + \
+                                path_key+'/json/shortestRoute/0/10/'+trans_station2+'/'+trans_station3
+                            trans_path3_response = requests.get(
+                                trans_path3_api_url)
+                            trans_path3_resdata = trans_path3_response.text
+                            trans_path3_obj = json.loads(trans_path3_resdata)
+                            try:
+                                trans_path3_obj = trans_path3_obj['shortestRouteList']
+                            except KeyError:
+                                print("keyerror")
+
+                            for item in trans_path3_obj:
+                                trans_path3_time = item.get('shtTravelTm')
+
+                            print(trans_path2_time)
+
+                            arrival_time3_min = int(
+                                arrival3_time[3:5]) + int(trans_path3_time[0:])
+                            if arrival_time3_min < 60:
+                                arrival_time3_min = int(
+                                    arrival3_time[3:5]) + int(trans_path3_time[0:])
+                                trans_arrival_time3 = arrival3_time[:2] + ':' + \
+                                    str(arrival_time3_min) + \
+                                    ':' + arrival3_time[6:]
+                            if arrival_time3_min >= 60:
+                                arrival_time3_min = int(
+                                    arrival3_time[3:5]) + int(trans_path3_time[0:]) - 60
+                                arrival_time3_hour = int(arrival3_time[:2]) + 1
+                                trans_arrival_time3 = str(arrival_time3_hour) + ':' + \
+                                    str(arrival_time3_min) + \
+                                    ':' + arrival3_time[6:]
+                                if int(trans_path3_time) < 10:
+                                    trans_arrival_time3 = str(
+                                        arrival_time3_hour) + ':0' + str(arrival_time3_min) + ':' + arrival3_time[6:]
+
+                            print(trans_arrival_time3)
+
+                            print('환승역(3) 시간표')
+                            break_index3 = 0
+                            for item in time_table_trans3_obj:
+                                if trans_arrival_time3 <= item.get('ARRIVETIME'):
+                                    print(item.get('ARRIVETIME'))
+                                    break_index3 += 1
+                                    if break_index3 == 3:
+                                        break
 
                         else:
                             print("환승 횟수가 0회이기 때문에, 환승 코드를 실행하지 않습니다.")
@@ -1166,17 +1418,27 @@ def home(request):
                 min_next_code = min_joined_station_code_list[1]
 
                 print(min_start_code)
+                print(min_trans_line)
                 # 최단시간 상행 하행 여부
-                if int(min_start_code) - int(min_next_code) > 0:
-                    up_down_tag = '1'
-                else:
-                    up_down_tag = '2'
+
+                if min_line == '03호선' or min_line == '04호선' or min_line == '07호선' or min_line == '08호선' or min_line == '수인분당선' or min_line == '신분당선' or min_line == '공항철도':
+                    if int(min_start_code) - int(min_next_code) > 0:
+                        min_up_down_tag = '1'
+                    else:
+                        min_up_down_tag = '2'
+                elif min_line == '01호선' or min_line == '02호선' or min_line == '05호선' or min_line == '06호선' or min_line == '09호선':
+                    if int(min_start_code) - int(min_next_code) > 0:
+                        min_up_down_tag = '2'
+                    else:
+                        min_up_down_tag = '1'
+
+                print(min_up_down_tag)
 
                 #########################################
                 # 서울시 역코드로 지하철역별 열차 시간표 정보 검색 https://data.seoul.go.kr/dataList/OA-101/A/1/datasetView.do
                 time_table_url = 'http://openAPI.seoul.go.kr:8088/'+key_num + \
                     '/json/SearchSTNTimeTableByIDService/1/300/' + \
-                    min_start_code+'/'+week_tag+'/'+up_down_tag
+                    min_start_code+'/'+week_tag+'/'+min_up_down_tag
                 time_table_response = requests.get((time_table_url))
                 time_table_resdata = time_table_response.text
                 time_table_obj = json.loads(time_table_resdata)
@@ -1185,12 +1447,20 @@ def home(request):
 
                 print('시간표시간표시간표')
                 # print(time_table_obj)
-                break_index = 0
+                break_min_index = 0
                 for item in time_table_obj:
-                    if test_time <= item.get('ARRIVETIME'):
+                    if str_time <= item.get('ARRIVETIME'):
                         print(item.get('ARRIVETIME'))
-                        break_index += 1
-                        if break_index == 3:
+                        break_min_index += 1
+                        if break_min_index == 3:
+                            break
+
+                break_min_index_index = 0
+                for item in time_table_obj:
+                    if str_time <= item.get('ARRIVETIME'):
+                        min_arrival_time = item.get('ARRIVETIME')
+                        break_min_index_index += 1
+                        if break_min_index_index == 1:
                             break
 
                 if min_path_trans_cnt == '1' or min_path_trans_cnt == '2' or min_path_trans_cnt == '3':
@@ -1305,6 +1575,106 @@ def home(request):
 
                     print('환승 1 회 최소환승')
                     print(min_joined_station_code_list1)
+                    min_trans_start_code = min_joined_station_code_list1[0]
+                    min_trans_next_code = min_joined_station_code_list1[1]
+
+                    # 최소 환승 1회시 환승역 열차 도착시간 구하기
+
+                    if min_trans_line == '03호선' or min_trans_line == '04호선' or min_trans_line == '07호선' or min_trans_line == '08호선' or min_trans_line == '수인분당선' or min_trans_line == '신분당선' or min_trans_line == '공항철도':
+                        if int(min_trans_start_code) - int(min_trans_next_code) > 0:
+                            min_trans_up_down_tag = '1'
+                        else:
+                            min_trans_up_down_tag = '2'
+                    elif min_trans_line == '01호선' or min_trans_line == '02호선' or min_trans_line == '05호선' or min_trans_line == '06호선' or min_trans_line == '09호선':
+                        if int(min_trans_start_code) - int(min_trans_next_code) > 0:
+                            min_trans_up_down_tag = '2'
+                        else:
+                            min_trans_up_down_tag = '1'
+
+                    min_trans_arrival_api_url = 'http://openapi.seoul.go.kr:8088/' + \
+                        key_num+'/json/SearchInfoBySubwayNameService/1/5/'+min_trans_station+'/'
+                    min_trans_arrival_response = requests.get(
+                        min_trans_arrival_api_url)
+                    min_trans_arrival_resdata = min_trans_arrival_response.text
+                    min_trans_arrival_obj = json.loads(
+                        min_trans_arrival_resdata)
+                    min_trans_arrival_obj = min_trans_arrival_obj['SearchInfoBySubwayNameService']
+                    min_trans_arrival_obj = min_trans_arrival_obj['row']
+
+                    print(min_trans_arrival_obj)
+
+                    for item in min_trans_arrival_obj:
+                        if min_trans_line == item.get('LINE_NUM'):
+                            min_trans_station_code = item.get(
+                                'STATION_CD')
+
+                    print(min_trans_station)
+                    print(min_trans_station_code)
+
+                    min_time_table_trans_url = 'http://openAPI.seoul.go.kr:8088/'+key_num + \
+                        '/json/SearchSTNTimeTableByIDService/1/300/' + \
+                        min_trans_station_code+'/'+week_tag+'/'+min_trans_up_down_tag
+                    min_time_table_trans_response = requests.get(
+                        (min_time_table_trans_url))
+                    min_time_table_trans_resdata = min_time_table_trans_response.text
+                    min_time_table_trans_obj = json.loads(
+                        min_time_table_trans_resdata)
+                    min_time_table_trans_obj = min_time_table_trans_obj['SearchSTNTimeTableByIDService']
+                    min_time_table_trans_obj = min_time_table_trans_obj['row']
+
+                    min_trans_path_api_url = 'http://swopenAPI.seoul.go.kr/api/subway/' + \
+                        path_key+'/json/shortestRoute/0/10/'+searchword+'/'+min_trans_station
+                    min_trans_path_response = requests.get(
+                        min_trans_path_api_url)
+                    min_trans_path_resdata = min_trans_path_response.text
+                    min_trans_path_obj = json.loads(min_trans_path_resdata)
+                    try:
+                        min_trans_path_obj = min_trans_path_obj['shortestRouteList']
+                    except KeyError:
+                        print("keyerror")
+
+                    for item in min_trans_path_obj:
+                        min_trans_path_time = item.get('shtTravelTm')
+
+                    print(min_trans_path_time)
+
+                    min_arrival_time_min = int(
+                        min_arrival_time[3:5]) + int(min_trans_path_time[0:])
+                    if min_arrival_time_min < 60:
+                        min_arrival_time_min = int(
+                            min_arrival_time[3:5]) + int(min_trans_path_time[0:])
+                        min_trans_arrival_time = min_arrival_time[:2] + ':' + \
+                            str(min_arrival_time_min) + \
+                            ':' + min_arrival_time[6:]
+                    if min_arrival_time_min >= 60:
+                        min_arrival_time_min = int(
+                            min_arrival_time[3:5]) + int(min_trans_path_time[0:]) - 60
+                        min_arrival_time_hour = int(min_arrival_time[:2]) + 1
+                        min_trans_arrival_time = str(min_arrival_time_hour) + ':' + \
+                            str(min_arrival_time_min) + \
+                            ':' + min_arrival_time[6:]
+                        if int(min_trans_path_time) < 10:
+                            min_trans_arrival_time = str(
+                                min_arrival_time_hour) + ':0' + str(min_arrival_time_min) + ':' + min_arrival_time[6:]
+
+                    print(min_trans_arrival_time)
+
+                    print('환승역 시간표')
+                    break_min_index2 = 0
+                    for item in min_time_table_trans_obj:
+                        if min_trans_arrival_time <= item.get('ARRIVETIME'):
+                            print(item.get('ARRIVETIME'))
+                            break_min_index2 += 1
+                            if break_min_index2 == 3:
+                                break
+
+                    break_min_index_index2 = 0
+                    for item in min_time_table_trans_obj:
+                        if min_trans_arrival_time <= item.get('ARRIVETIME'):
+                            min_arrival_time2 = item.get('ARRIVETIME')
+                            break_min_index_index2 += 1
+                            if break_min_index_index2 == 1:
+                                break
 
                     # ----------------------------------------------------------------------------------------------------------------------------
                     if min_path_trans_cnt == '2' or min_path_trans_cnt == '3':
@@ -1364,7 +1734,7 @@ def home(request):
                             min_trans_station2)
 
                         # 환승역 다음 역
-                        min_next_trans_station2 = min_after_trans_path_list[min_index2+2]
+                        min_next_trans_station2 = min_after_trans_path_list[min_index2+1]
 
                         # 환승역 기준 다시 도착역 까지 경로
                         # 1회 환승 이후 노선 찾기
@@ -1456,8 +1826,94 @@ def home(request):
                         min_joined_station_code_list2 = [
                             v for v in min_joined_station_code_list2 if v]
 
+                        min_trans_start_code2 = min_joined_station_code_list2[0]
+                        min_trans_next_code2 = min_joined_station_code_list2[1]
+
                         print('환승 2 회 최소환승')
                         print(min_joined_station_code_list2)
+
+                        # 환승 2번 했을 시 환승역 출발시간(최소환승시)
+                        if min_trans_line2 == '03호선' or min_trans_line2 == '04호선' or min_trans_line2 == '07호선' or min_trans_line2 == '08호선' or min_trans_line2 == '수인분당선' or min_trans_line2 == '신분당선' or min_trans_line2 == '공항철도':
+                            if int(min_trans_start_code2) - int(min_trans_next_code2) > 0:
+                                min_trans_up_down_tag2 = '1'
+                            else:
+                                min_trans_up_down_tag2 = '2'
+                        elif min_trans_line2 == '01호선' or min_trans_line2 == '02호선' or min_trans_line2 == '05호선' or min_trans_line2 == '06호선' or min_trans_line2 == '09호선':
+                            if int(min_trans_start_code2) - int(min_trans_next_code2) > 0:
+                                min_trans_up_down_tag2 = '2'
+                            else:
+                                min_trans_up_down_tag2 = '1'
+
+                        min_time_table_trans2_url = 'http://openAPI.seoul.go.kr:8088/'+key_num + \
+                            '/json/SearchSTNTimeTableByIDService/1/300/' + \
+                            min_trans_start_code2+'/'+week_tag+'/'+min_trans_up_down_tag2
+                        min_time_table_trans2_response = requests.get(
+                            (min_time_table_trans2_url))
+                        min_time_table_trans2_resdata = min_time_table_trans2_response.text
+                        min_time_table_trans2_obj = json.loads(
+                            min_time_table_trans2_resdata)
+                        min_time_table_trans2_obj = min_time_table_trans2_obj[
+                            'SearchSTNTimeTableByIDService']
+                        min_time_table_trans2_obj = min_time_table_trans2_obj['row']
+
+                        min_trans_path2_api_url = 'http://swopenAPI.seoul.go.kr/api/subway/' + \
+                            path_key+'/json/shortestRoute/0/10/'+min_trans_station+'/'+min_trans_station2
+                        min_trans_path2_response = requests.get(
+                            min_trans_path2_api_url)
+                        min_trans_path2_resdata = min_trans_path2_response.text
+                        min_trans_path2_obj = json.loads(
+                            min_trans_path2_resdata)
+                        try:
+                            min_trans_path2_obj = min_trans_path2_obj['shortestRouteList']
+                        except KeyError:
+                            print("keyerror")
+
+                        for item in min_trans_path2_obj:
+                            min_trans_path_time2 = item.get('shtTravelTm')
+
+                        print(min_trans_path_time2)
+
+                        min_arrival_time2_min = int(
+                            min_arrival_time2[3:5]) + int(min_trans_path_time2[0:])
+                        if min_arrival_time2_min < 60:
+                            min_arrival_time2_min = int(
+                                min_arrival_time2[3:5]) + int(min_trans_path_time2[0:])
+                            min_trans_arrival_time2 = min_arrival_time2[:2] + ':' + \
+                                str(min_arrival_time2_min) + \
+                                ':' + min_arrival_time2[6:]
+                        if min_arrival_time2_min >= 60:
+                            min_arrival_time2_min = int(
+                                min_arrival_time2[3:5]) + int(min_trans_path_time2[0:]) - 60
+                            min_arrival_time2_hour = int(
+                                min_arrival_time2[:2]) + 1
+                            if int(min_arrival_time2_min) < 10:
+                                min_trans_arrival_time2 = str(
+                                    min_arrival_time2_hour) + ':0' + str(min_arrival_time2_min) + ':' + min_arrival_time2[6:]
+                            else:
+                                min_trans_arrival_time2 = str(min_arrival_time2_hour) + ':' + \
+                                    str(min_arrival_time2_min) + \
+                                    ':' + min_arrival_time2[6:]
+
+                        print(min_trans_arrival_time2)
+
+                        print('환승역(2) 시간표')
+                        break_min_index3 = 0
+                        for item in min_time_table_trans2_obj:
+                            if min_trans_arrival_time2 <= item.get('ARRIVETIME'):
+                                print(item.get('ARRIVETIME'))
+                                break_min_index3 += 1
+                                if break_min_index3 == 3:
+                                    break
+
+                        break_min_index_index3 = 0
+                        for item in min_time_table_trans2_obj:
+                            if min_trans_arrival_time2 <= item.get('ARRIVETIME'):
+                                min_arrival_time3 = item.get('ARRIVETIME')
+                                break_min_index_index3 += 1
+                                if break_min_index_index3 == 1:
+                                    break
+
+                        print(min_arrival_time3)
 
                         if min_path_trans_cnt == '3':
                             print('최소환승 경로 환승 횟수가 3 회 ')
@@ -1612,8 +2068,84 @@ def home(request):
                             min_joined_station_code_list3 = [
                                 v for v in min_joined_station_code_list3 if v]
 
-                            print('환승 0 회 최소환승')
+                            min_trans_start_code3 = min_joined_station_code_list3[0]
+                            min_trans_next_code3 = min_joined_station_code_list3[1]
+
+                            print('환승 3회 최소환승')
                             print(min_joined_station_code_list3)
+
+                            # 환승 3번 했을 시 환승역 출발시간(최소환승시)
+                            if min_trans_line3 == '03호선' or min_trans_line3 == '04호선' or min_trans_line3 == '07호선' or min_trans_line3 == '08호선' or min_trans_line3 == '수인분당선' or min_trans_line3 == '신분당선' or min_trans_line3 == '공항철도':
+                                if int(min_trans_start_code3) - int(min_trans_next_code3) > 0:
+                                    min_trans_up_down_tag3 = '1'
+                                else:
+                                    min_trans_up_down_tag3 = '2'
+                            elif min_trans_line3 == '01호선' or min_trans_line3 == '02호선' or min_trans_line3 == '05호선' or min_trans_line3 == '06호선' or min_trans_line3 == '09호선':
+                                if int(min_trans_start_code3) - int(min_trans_next_code3) > 0:
+                                    min_trans_up_down_tag3 = '2'
+                                else:
+                                    min_trans_up_down_tag3 = '1'
+
+                            min_time_table_trans3_url = 'http://openAPI.seoul.go.kr:8088/'+key_num + \
+                                '/json/SearchSTNTimeTableByIDService/1/300/' + \
+                                min_trans_start_code3+'/'+week_tag+'/'+min_trans_up_down_tag3
+                            min_time_table_trans3_response = requests.get(
+                                (min_time_table_trans3_url))
+                            min_time_table_trans3_resdata = min_time_table_trans3_response.text
+                            min_time_table_trans3_obj = json.loads(
+                                min_time_table_trans3_resdata)
+                            min_time_table_trans3_obj = min_time_table_trans3_obj[
+                                'SearchSTNTimeTableByIDService']
+                            min_time_table_trans3_obj = min_time_table_trans3_obj['row']
+
+                            min_trans_path3_api_url = 'http://swopenAPI.seoul.go.kr/api/subway/' + \
+                                path_key+'/json/shortestRoute/0/10/'+min_trans_station2+'/'+min_trans_station3
+                            min_trans_path3_response = requests.get(
+                                min_trans_path3_api_url)
+                            min_trans_path3_resdata = min_trans_path3_response.text
+                            min_trans_path3_obj = json.loads(
+                                min_trans_path3_resdata)
+                            try:
+                                min_trans_path3_obj = min_trans_path3_obj['shortestRouteList']
+                            except KeyError:
+                                print("keyerror")
+
+                            for item in min_trans_path3_obj:
+                                min_trans_path_time3 = item.get('shtTravelTm')
+
+                            print(min_trans_path_time3)
+
+                            min_arrival_time3_min = int(
+                                min_arrival_time3[3:5]) + int(min_trans_path_time3[0:])
+                            if min_arrival_time3_min < 60:
+                                min_arrival_time3_min = int(
+                                    min_arrival_time3[3:5]) + int(min_trans_path_time3[0:])
+                                min_trans_arrival_time3 = min_arrival_time3[:2] + ':' + \
+                                    str(min_arrival_time3_min) + \
+                                    ':' + min_arrival_time3[6:]
+                            if min_arrival_time3_min >= 60:
+                                min_arrival_time3_min = int(
+                                    min_arrival_time3[3:5]) + int(min_trans_path_time3[0:]) - 60
+                                min_arrival_time3_hour = int(
+                                    min_arrival_time3[:2]) + 1
+                                if int(min_arrival_time3_min) < 10:
+                                    min_trans_arrival_time3 = str(
+                                        min_arrival_time3_hour) + ':0' + str(min_arrival_time3_min) + ':' + min_arrival_time3[6:]
+                                else:
+                                    min_trans_arrival_time3 = str(min_arrival_time3_hour) + ':' + \
+                                        str(min_arrival_time3_min) + \
+                                        ':' + min_arrival_time3[6:]
+
+                            print(min_trans_arrival_time3)
+
+                            print('환승역(3) 시간표')
+                            break_min_index4 = 0
+                            for item in min_time_table_trans3_obj:
+                                if min_trans_arrival_time3 <= item.get('ARRIVETIME'):
+                                    print(item.get('ARRIVETIME'))
+                                    break_min_index4 += 1
+                                    if break_min_index4 == 3:
+                                        break
 
                 else:
                     print('환승 횟수 0 회 ')
@@ -1629,7 +2161,7 @@ def home(request):
                 print(min_after_trans_path_list3)
                 print(min_joined_station_code_list3)
 
-                return render(request, 'min_path.html', {'trans_line3': trans_line3, 'joined_path_station_list3': joined_path_station_list3, 'after_trans_path_list3': after_trans_path_list3, 'min_after_trans_path_list2': min_after_trans_path_list2, 'min_joined_path_station_list2': min_joined_path_station_list2, 'min_trans_station2': min_trans_station2, 'min_trans_line2': min_trans_line2, 'min_path_trans_cnt': min_path_trans_cnt, 'sht_path_trans_cnt': sht_path_trans_cnt, 'joined_path_station_list2': joined_path_station_list2, 'trans_line2': trans_line2, 'trans_station2': trans_station2, 'after_trans_path_list2': after_trans_path_list2, 'min_line': min_line, 'min_trans_line': min_trans_line, 'min_joined_path_station_list': min_joined_path_station_list, 'min_after_trans_path_list': min_after_trans_path_list, 'trans_line': trans_line, 'after_trans_path_list': after_trans_path_list, 'joined_path_station_list': joined_path_station_list, 'line_obj': line_obj, 'line': line, 'min_min_path_time': min_min_path_time, 'min_path_time': min_path_time, 'obj': obj, 'min_path_list': min_path_list, 'min_path_msg': min_path_msg, 'sht_path_msg': sht_path_msg, 'min_sht_path_time': min_sht_path_time, 'path_time': path_time, 'sht_path_list': sht_path_list, 'path_obj': path_obj, 'dest_obj': dest_obj, 'trans_arrival_obj': trans_arrival_obj})
+                return render(request, 'min_path.html', {'trans_line3': trans_line3, 'joined_path_station_list3': joined_path_station_list3, 'after_trans_path_list3': after_trans_path_list3, 'min_after_trans_path_list2': min_after_trans_path_list2, 'min_joined_path_station_list2': min_joined_path_station_list2, 'min_trans_station2': min_trans_station2, 'min_trans_line2': min_trans_line2, 'min_path_trans_cnt': min_path_trans_cnt, 'sht_path_trans_cnt': sht_path_trans_cnt, 'joined_path_station_list2': joined_path_station_list2, 'trans_line2': trans_line2, 'trans_station2': trans_station2, 'after_trans_path_list2': after_trans_path_list2, 'min_line': min_line, 'min_trans_line': min_trans_line, 'min_joined_path_station_list': min_joined_path_station_list, 'min_after_trans_path_list': min_after_trans_path_list, 'trans_line': trans_line, 'after_trans_path_list': after_trans_path_list, 'joined_path_station_list': joined_path_station_list, 'line_obj': line_obj, 'line': line, 'min_min_path_time': min_min_path_time, 'min_path_time': min_path_time, 'obj': obj, 'min_path_list': min_path_list, 'min_path_msg': min_path_msg, 'sht_path_msg': sht_path_msg, 'min_sht_path_time': min_sht_path_time, 'path_time': path_time, 'sht_path_list': sht_path_list, 'path_obj': path_obj, 'dest_obj': dest_obj})
 
             # 서울교통공사_서울 도시철도 목적지 경로정보 https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15097640
             ''' -> API 오류 HTTP ERROR
