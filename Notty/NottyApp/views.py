@@ -24,10 +24,8 @@ path_key = '66794970516a6f7737317a58794163'
 화면에 표시 할 자료
 sht_line : 처음 탄 지하철의 호선 (최단 시간)
 min_line : 처음 탄 지하철의 호선 (최소 환승)
-
 sht_path_list : 최단 시간 경로
 min_path_list : 최소 환승 경로
-
 trans_line : 1회 환승 한 이후 지하철의 호선(최단시간)
 trans_station : 1회 환승 한 환승역(최단시간)
 joined_path_station_list : 출발지부터 1회 환승 전 까지의 경로(최단시간)
@@ -1667,11 +1665,9 @@ def home(request):
             #서울교통공사_서울 도시철도 목적지 경로정보 https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15097640
             ''' -> API 오류 HTTP ERROR
             key = 'oTsloDJ6xmHymJiItQxmn1GEp2HiiX+8fA+H6PRKbCUp3XWPNEAViCpeWOir0YPCRpFHH3XQ6i6PlYwNdEg4dQ=='
-
             
             api_url4 = 'http://apis.data.go.kr/B553766/smt-path/path'
             params ={'serviceKey' : key, 'pageNo' : '1', 'numOfRows' : '10', 'dept_station_code' : '2728', 'dest_station_code' : '0214', 'week' : 'DAY', 'search_type' : 'FASTEST', 'first_last' : '', 'dept_time' : '120001', 'train_seq' : '' }
-
             path_response = requests.get(api_url4, params=params)
             path_resdata = path_response.text
             path_obj = json.loads(path_resdata)
@@ -2308,7 +2304,8 @@ def showFirebaseJS(request):
          '    };' \
          '    return self.registration.showNotification(payload.notification.title,notificationOption);' \
          '});'
-         
+    return HttpResponse(data,content_type="text/javascript")
+
 def showFirebaseJS2(request):
     data='importScripts("https://www.gstatic.com/firebasejs/8.2.0/firebase-app.js");' \
          'importScripts("https://www.gstatic.com/firebasejs/8.2.0/firebase-messaging.js"); ' \
@@ -2366,5 +2363,3 @@ def holiday(today_year):
     
 
     return holidate
-
-            
