@@ -128,6 +128,17 @@ def home(request):
         searchword = request.POST.get('start')
         destword = request.POST.get('fin')
 
+        if searchword == '역삼역':
+            searchword = '역삼'
+        elif destword == '역삼역':
+            searchword = '역삼'
+        
+        if searchword.endswith('역'):
+            searchword = searchword.replace('역','')
+        if destword.endswith('역'):
+            destword = destword.replace('역','')
+        
+        
         user_token = request.POST.get('user_token')
 
         if form.is_valid():
