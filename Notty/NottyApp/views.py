@@ -619,12 +619,12 @@ def home(request):
                             
                 print(sht_start_code)
                 # 최단시간 상행 하행 여부
-                if sht_line == '03호선' or sht_line == '04호선' or sht_line == '07호선' or sht_line == '08호선':
+                if sht_line == '03호선' or sht_line == '04호선' or sht_line == '07호선' or sht_line == '08호선' or sht_line == '05호선':
                     if int(sht_start_code) - int(sht_next_code) > 0:
                         up_down_tag = '1'
                     else:
                         up_down_tag = '2'
-                elif sht_line == '01호선' or sht_line == '02호선' or sht_line == '05호선' or sht_line == '06호선' or sht_line == '09호선':
+                elif sht_line == '01호선' or sht_line == '02호선' or sht_line == '06호선' or sht_line == '09호선':
                     if int(sht_start_code) - int(sht_next_code) > 0:
                         up_down_tag = '2'
                     else:

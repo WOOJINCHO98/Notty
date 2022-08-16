@@ -139,7 +139,7 @@
         
         <input type="hidden" name="user_token" id="data" value="">
 
-        <input type="submit" value="검색">
+        <input type="submit" onclick="string_process();" value="검색">
         <br>
         <br>
 
@@ -155,6 +155,17 @@
           temp2 = document.getElementById("finishID").value
           document.getElementById("startID").value=temp2
           document.getElementById("finishID").value=temp1
+        }
+
+        function string_process(){
+          str_start = document.getElementById("startID").value
+          str_finish = document.getElementById("finishID").value
+          if (str_start.indexOf('역') != -1) {
+            document.getElementById("startID").value = str_start.replace('역','');
+          }
+          if (str_finish.indexOf('역') != -1) {
+            document.getElementById("finishID").value = str_finish.replace('역','');
+          }
         }
 
     </script>
