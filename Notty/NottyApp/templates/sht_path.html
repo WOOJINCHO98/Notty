@@ -9,17 +9,18 @@
         <a href='/' style="font-size:40px">X</a>
         <h1 style="display:inline">Notty</h1>
     </div>
+    <meta http-equiv="refresh" content= "5 ; url=sht">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body>
 
 
     <br>
     <p>현재 역 위치 : 
-        {% if line == min_line %}
+
         {{line}}
-        {% else %}
-        {{line}} / {{min_line}}
-        {% endif %}
+
         
     </p>
     <div class="box">
@@ -59,9 +60,14 @@
             {{sht_path_list.66}} {{sht_path_list.67}} {{sht_path_list.68}} {{sht_path_list.69}} {{sht_path_list.70}} {{sht_path_list.71}} 
             <br>
             <br>
+                        -->
             {{sht_path_msg}}
             <br><br><br>
-            -->
+            시간표 : {{sht_joined_time_table_list.0}} {{sht_joined_time_table_list.1}} {{sht_joined_time_table_list.2}}
+            <br>
+
+            <br>
+            <br>
             ------------------------------------------------------------
             <br>
             (최단시간)
@@ -220,7 +226,35 @@
 
             <br>
 
+<!--
+            AJAX TEST
 
+            <script type="text/javascript">
+                $(function() {    
+                    data = $('#text').val();
+                    timer = setInterval( function () {
+                        $.ajax ({
+                            type:'POST',
+                            url:'127.0.0.1:8000/home',  // ----- (1)
+                            data:JSON.stringify(data),
+                            success : function (json) { // ----- (2)
+                                //[받아온 내용을 처리할 부분] // ----- (3)
+                                //[받아온 내용은 변수 html로 전달]
+                                console.log("data pass success",json);
+
+                            },
+                            error : function(xhr,errmsg,err) {
+                            console.log(xhr.status + ": " + xhr.responseText); 
+                            }		
+                        });
+                    }, 10000); // 10초에 한번씩 받아온다.
+                });
+
+
+                
+                </script>
+
+                -->
             <br>
  
             ------------------------------------------------------------

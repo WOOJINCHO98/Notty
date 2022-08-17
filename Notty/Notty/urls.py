@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 import NottyApp.views
+from NottyApp.views import *
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,6 +26,17 @@ urlpatterns = [
     path('detail/',NottyApp.views.detail, name='detail'),
     path('favorite/',NottyApp.views.favorite, name='favorite'),
     path('sht_path/' ,NottyApp.views.sht_path, name='sht_path'),
-    path('min_path/' ,NottyApp.views.min_path, name='min_path'),
+    path('min_detail/' ,NottyApp.views.min_detail, name='min_detail'),
+    path('sht_detail/',NottyApp.views.sht_detail, name='sht_detail'),
+    path('sht/',NottyApp.views.sht, name='sht'),
+    path('real_min/',NottyApp.views.real_min, name='real_min'),
 
+    path('flash/',NottyApp.views.flash, name='flash'),
+    path('arrive/',NottyApp.views.arrive, name='arrive'),
+    
+    path('firebase-messaging-sw.js', showFirebaseJS, name="show_firebase_js"),
+    path('firebase-messaging-sw.js', showFirebaseJS2, name="show_firebase_js2"),
+    path('send/' , send),
+
+    
 ]
