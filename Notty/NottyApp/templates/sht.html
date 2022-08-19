@@ -5,15 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notty</title>
-    <div>
+    <!-- <div>
         <a href='/' style="font-size:40px">X</a>
         <a href='/setting/' style="font-size:40px; float:right;">=</a>
-    </div>
+    </div> -->
     <meta http-equiv="refresh" content= "35 ; url=/sht">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
 
     <style>
-        h1 {
+        /* h1 {
     font-size: 40px;
     text-align: center;
     margin: 0;
@@ -21,7 +22,34 @@
     margin-bottom:200px;
     font-family: 'MICEGothic Bold';
 
-}
+} */
+
+@font-face {
+          font-family: 'MICEGothic Bold';
+          src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-01@1.0/MICEGothic Bold.woff2') format('woff2');
+          font-weight: 700;
+          font-style: normal;
+        }
+    @font-face {
+        font-family: 'MICEGothic';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-01@1.0/MICEGothic.woff2') format('woff2');
+        font-weight: 400;
+        font-style: normal;
+    }
+    
+html {font-size: 1px;}
+body {font-size: 1rem;}
+
+a {
+    text-decoration: none;
+    color: #ffffff;
+    }
+
+a:visited { text-decoration: none; }
+a:hover { text-decoration: none; }
+a:focus { text-decoration: none; }
+a:hover, a:active { text-decoration: none; }
+
 
 body {
     font-family: 'MICEGothic';
@@ -30,6 +58,27 @@ body {
     background-color:#9F9F9F;
     padding: 0;
     margin: 0;
+}
+
+.page2_icons {
+    padding: 15rem;
+    font-size: 32rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.none {
+    /* color: #9F9F9F; */
+}
+
+.notty_logo {
+    margin-top: 8px;
+    padding: 0;
+    font-size: 32px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    font-family: 'MICEGothic Bold';
 }
 
 /* 상세정보 박스 */
@@ -42,6 +91,7 @@ body {
     padding: 0;
     margin: 0 auto;
     line-height: 60px;
+    font-size: 16rem;
 }
 
 /* 현재 역 이름 박스 */
@@ -67,6 +117,7 @@ body {
     padding: 0;
     margin: 0 auto;
     line-height: 60px;
+    font-size: 13px;
 }
 
 #nowStationbox {
@@ -75,20 +126,37 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+#time_selected {
+    font-size: 16px;
+    text-align: center;
+    background-color: #8b4513;
+    color: #ffffff;
+}
+
     </style>
 </head>
 <body style="background-color: #9F9F9F;">
-    <h1>Notty</h1>
+    <!-- <h1>Notty</h1> -->
+    <div class="page2_icons">
+        <div class="none">
+            <a href='/'><i class="fa-solid fa-x "></i></a>
+            
+        </div>
+        <div class="notty_logo">Notty</div>
+        <a href='/setting/'><i class="fa-solid fa-bars"></i></a>
     <div id="nowStationbox">
         
         <form action="/sht/" method="GET">
-            <select name="time_drop_list" id="time_selected" onchange="this.form.submit()" style="border-radius:0; width:206px; height:60px; float:left; margin:0;">
+            <!-- <select name="time_drop_list" id="time_selected" onchange="this.form.submit()" style="border-radius:0; width:206px; height:60px; float:left; margin:0;"> -->
+            <select name="time_drop_list" id="time_selected" onchange="this.form.submit()" style="border-radius:0; width:50vw; height:60px; float:left; margin:0;">
+
                 <option value="">시간 선택</option>
                 <option value="first">{{sht_joined_time_table_list.0}}</option>
                 <option value="second">{{sht_joined_time_table_list.1}}</option>
                 <option value="third">{{sht_joined_time_table_list.2}}</option>
             </select>
-            </form>
+        </form>
         
 
        
@@ -99,10 +167,12 @@ body {
                     style="
                         background-color: #8b4513;
                         color: #ffffff;
-                        width: 206px;
+                        /* width: 206px; */
+                        width: 50vw;
                         height: 60px;
                         float: left;
                         margin: 0;
+                        /* font-size: 16px; */
                     "
                 >
             <a href='/sht_detail'>상세 정보</a>
