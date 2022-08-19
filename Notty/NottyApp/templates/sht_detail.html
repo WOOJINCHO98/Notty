@@ -5,16 +5,213 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notty</title>
-    <div>
+    <!-- <div>
         <a href='/sht' style="font-size:40px">X</a>
-        <!-- <h1 style="display:inline">Notty</h1> -->
-    </div>
-    <meta http-equiv="refresh" content= "5 ; url=/sht_detail">
+        <h1 style="display:inline">Notty</h1>
+    </div> -->
+    <meta http-equiv="refresh" content= "45 ; url=/sht_detail">
+    <link rel="stylesheet" href="sht_detail.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </head>
 <body>
 
+    <!-- 소요시간 -->
+    <!-- {{sht_path_time}} -->
+    <!-- 환승횟수 -->
+    <!-- {{sht_path_trans_cnt}} -->
+    <div class="up_color">
+        <div class="page2_icons">
+            <a href='/sht'><i class="fa-solid fa-x"></i></a>
+            <div class="notty_logo">Notty</div>
+            <a href='/setting/'><i class="fa-solid fa-bars"></i></a>
+        </div>
+        
+        <div class="one">
+            <div class="line"></div>
+            <div class="line_out">
+                <div class="section">
+                    <div class="small_circle"><i class="fa-solid fa-circle"></i></div>
+                </div>
+                <div class="section">
+                    <div class="small_circle_now"><i class="fa-solid fa-circle"></i></div>
+                    <div class="small_name">{{real_time_position}}</div>
+                </div>
+                <div class="section">
+                    <div class="small_circle"><i class="fa-solid fa-circle"></i></div>
+                    <div class="small_name">{{sht_real_path_list.1}}</div>
+                </div>
+                <div class="section">
+                    <div class="small_circle"><i class="fa-solid fa-circle"></i></div>
+                    <div class="small_name">{{sht_real_path_list.2}}</div>
+                </div>
+                <div class="section">
+                    <div class="small_circle"><i class="fa-solid fa-circle"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+
+        @font-face {
+            font-family: 'MICEGothic Bold';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-01@1.0/MICEGothic Bold.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'MICEGothic';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-01@1.0/MICEGothic.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        a {
+        text-decoration: none;
+        color: black;
+        }
+
+        a:visited { text-decoration: none; }
+        a:hover { text-decoration: none; }
+        a:focus { text-decoration: none; }
+        a:hover, a:active { text-decoration: none; }
+
+        html {font-size: 1px;}
+        body {
+            font-size: 1rem;
+            font-family: 'MICEGothic';
+        }
+        
+
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            /* background: linear-gradient(to bottom, #9F9F9F 0%, #d9d9d993 70%); */
+            background-color: #c3c3c3;;
+        }
+
+        .up_color {
+            background-color: #9F9F9F;
+            border-bottom: solid 3px #D9D9D9;
+        }
+
+        .page2_icons {
+            padding: 15rem;
+            font-size: 32rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .notty_logo {
+            margin-top: 8px;
+            padding: 0;
+            font-size: 32rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            font-family: 'MICEGothic Bold';
+        }
+
+        .one{
+            height: max-content;
+            font-size: 30rem;
+            position: relative;
+            margin: 20px;
+            /* padding-bottom: 20px; */
+        }
+
+        .line {
+            background-color: #646464;
+            height: 5px;
+            border-radius: 10px;
+        }
+
+        .line_out{
+            display: flex;
+            justify-content: space-around;
+        }
+
+
+        .section{
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+
+        .small_circle, .small_circle_now {
+            color: #D9D9D9;
+            font-size: 12px;
+        }
+
+        .small_circle_now {
+            color: #8B4513;
+        }
+
+        .small_name {
+            margin-top: 3px;
+            font-size: 14rem;
+        }
+
+    </style>
+
+    <style>
+        .two{
+            padding: 20px 20px 85px 20px;
+            height: max-content;
+            font-size: 24px;
+            background-color: #c3c3c3;
+        }
+
+        .time {
+            font-weight: bold;
+        }
+
+
+        .upup {
+            display: flex;
+            justify-content: space-between;
+            font-size: 24px;
+            padding-bottom: 13px;
+            border-bottom: 2.8px solid #646464;
+        }
+
+        .startst {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .startst_in {
+            margin: 10px;
+        }
+
+
+    </style>
+
+    <div class="two">
+        <div class="upup">
+            <div class="time">
+                소요시간 : {{sht_path_time}}분
+            </div>
+            <div class="heart_icon">
+                <i class="fa-regular fa-heart"></i>
+            </div>
+        </div>
+        <div class="startst">
+            <div class="startst_in">{{sht_real_path_list.0}}</div>
+            <div class="startst_in">{{sht_real_path_list.1}}</div>
+            <div class="startst_in">{{sht_real_path_list.2}}</div>
+            <div class="startst_in">{{sht_real_path_list.3}}</div>
+            <div class="startst_in">{{sht_real_path_list.4}}</div>
+            <div class="startst_in">{{sht_real_path_list.5}}</div>
+            <div class="startst_in">{{sht_real_path_list.6}}</div>
+        </div>
+    </div>
 
     <br>
     <p>현재 역 위치 : 
@@ -41,10 +238,24 @@
     {% else %}
     {% endif %}
 
+
+    <script>
+        if(real_time_line == '2호선'){
+            document.getElementsByClassName("small_circle_now").style.color="orange";
+        }
+    </script>
+
+
         
     </p>
+    {{sht_real_path_list.0}}
+    {{sht_real_path_list.1}}
+    {{sht_real_path_list.2}}
+    {{sht_real_path_list.3}}
+    {{sht_real_path_list.4}}
+    {{sht_real_path_list.5}}
+    {{sht_real_path_list.6}}
 
-    {{sht_real_path_list}}
 
     <div class="box">
         <div style="border:1px solid; padding:10px;">     
@@ -263,7 +474,7 @@
 
 
                 
-                </script>
+                </javascript>
 
                 -->
             <br>
