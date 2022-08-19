@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
     <title>Notty</title>
-    <h1 style="display:inline">Notty</h1>
-    <a href='/setting/' style="font-size:40px">=</a>
+    <!-- <h1 style="display:inline">Notty</h1>
+    <a href='/setting/' style="font-size:40px">=</a> -->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
@@ -122,7 +123,7 @@
 
 
 
-    <form action=""  method="POST">
+    <!-- <form action=""  method="POST">
         {% csrf_token %}
         <input type="radio" name="answers" id="answer1" value ='sht_path'>
           <label for="answer1"><p>최단 시간</p></label>
@@ -130,7 +131,9 @@
           <label for="answer2"><p>최소 환승</p></label>
         
         <table>
-          <!---{{ form.as_table }}-->
+
+          {{ form.as_table }} 주석처리
+
           <input type="text" class="inputText1" id="startID" name="start" value="" placeholder="출발역" onfocus="this.placeholder=''" onblur="this.placeholder='출발역'">
           <br>
           <input type="text" class="inputText2" id="finishID" name="fin" value="" placeholder="도착역" onfocus="this.placeholder=''" onblur="this.placeholder='도착역'">
@@ -161,10 +164,218 @@
     </script>
 <br>
 
-    <a href='/favorite/'>❤</a>
+    <a href='/favorite/'>❤</a> -->
+
+
+        <div class="page2_icons">
+      <div class="none">
+          <i class="fa-solid fa-x "></i>
+      </div>
+      <div class="notty_logo">Notty</div>
+      <a href='/setting/'><i class="fa-solid fa-bars"></i></a>
+      <!-- <i class="fa-solid fa-bars"></i> -->
+    </div>
+
+    <div class="margin">
+      <div class="form">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="select1">
+              <div class="select2">
+                <input type="radio" name="answers" id="answer1" value ='sht_path'>
+                  <label for="answer1">최단 시간</label>
+              </div>
+              <div class="select2">
+                <input type="radio" name="answers" id="answer2" value ='min_path'>
+                  <label for="answer2">최소 환승</label>
+              </div>
+            </div>
+
+            <table class="station">
+              <!-- {{ form.as_table }} -->
+              <input type="text" class="inputText1" id="startID" name="start" value="" placeholder="출발역" onfocus="this.placeholder=''" onblur="this.placeholder='출발역'">
+              <input type="text" class="inputText2" id="finishID" name="fin" value="" placeholder="도착역" onfocus="this.placeholder=''" onblur="this.placeholder='도착역'">
+            </table>
+
+            <input type="hidden" name="user_token" id="data" value="">
+            <input class="search" type="submit" onclick="string_process();" value="검색">
+        </form>
+
+          <div class="side1">
+                <button class="chan" onclick="reverse();">경로 바꾸기</button>
+                <script>
+                  function reverse(){
+                  temp1 = document.getElementById("startID").value
+                  temp2 = document.getElementById("finishID").value
+                  document.getElementById("startID").value=temp2
+                  document.getElementById("finishID").value=temp1
+                  }
+                </script>
+            <a class="side2" href='/favorite/'>즐겨찾는 경로</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ad">광고</div>
+    <style>
+      @font-face {
+          font-family: 'MICEGothic Bold';
+          src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-01@1.0/MICEGothic Bold.woff2') format('woff2');
+          font-weight: 700;
+          font-style: normal;
+      }
+      @font-face {
+          font-family: 'MICEGothic';
+          src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-01@1.0/MICEGothic.woff2') format('woff2');
+          font-weight: 400;
+          font-style: normal;
+      }
+
+      html {font-size: 1px;}
+      body {font-size: 1rem;}
+
+      body {
+          margin: 0;
+          padding: 0;
+          width: 100vw;
+          height: 100vh;
+          background-color: #9F9F9F;
+          font-family: 'MICEGothic';
+      }
+
+      a {
+          text-decoration: none;
+          color: black;
+      }
+      a:visited { text-decoration: none; }
+      a:hover { text-decoration: none; }
+      a:focus { text-decoration: none; }
+      a:hover, a:active { text-decoration: none; }
+
+      .page2_icons {
+          padding: 15rem;
+          font-size: 32rem;
+          display: flex;
+          justify-content: space-between;
+          /* color: inherit; */
+      }
+
+      .none {
+          color: #9F9F9F;
+      }
+
+      .notty_logo {
+          margin-top: 8px;
+          padding: 0;
+          font-size: 32rem;
+          font-weight: bold;
+          display: flex;
+          justify-content: center;
+          font-family: 'MICEGothic Bold';
+      }
+
+      .margin {
+          position: absolute;
+          height: fit-content;
+          left:0; right:0; margin-left:auto; margin-right:auto;
+          top: 0; bottom:0; margin-top:auto; margin-bottom:auto;
+      }
+
+
+      .form {
+          margin: 20rem;
+          /* height: fit-content; */
+          /* margin-bottom: 65rem; */
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          text-align: center;
+      }
+
+      .select1 {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          margin-bottom: 20px;
+      }
+
+      .select2 {
+          font-size: 15rem;
+          background-color: #BBBBBB;
+          width: 42vw;
+          line-height: 30rem;
+          height: 32rem;
+          line-height: 32rem;
+      }
+
+      /* .station {
+        background-color: #BBBBBB;
+        font-size: 20rem;
+        line-height: 80rem;
+        height: 80rem;
+        margin-bottom: 20px;
+        width: 90vw;
+        padding: 0px 10px;
+      } */
+
+      /* #id_start, #id_fin {
+        height: 30px;
+        width: 60vw;
+        background-color: #BBBBBB;
+        border-width: 0px 0px 3px 0px ;
+        font-size: 20px;
+      } */
+
+      .inputText1, .inputText2 {
+        background-color: #BBBBBB;
+        border: 0;
+        width: 88vw;
+        height: 60rem;
+        line-height: 60rem;
+        font-size: 25rem;
+        margin-bottom: 17rem;
+        text-align: center;
+      }
+
+      
+
+      .search {
+        background-color: #646464;
+        font-size: 30rem; 
+        line-height: 60rem;
+        height: 65rem;
+        margin-bottom: 25px;
+        color: #F3F3F3;
+        width: 90vw;
+      }
+
+      .side1 {
+        display: flex;
+        flex-direction: row;
+        font-size: 14rem;
+        /* color: #F9F9F9; */
+        justify-content: space-around;
+      }
+
+      .chan {
+        background-color: #9F9F9F;
+        border: #9F9F9F;
+        font-size: 14rem;
+        font-family: 'MICEGothic';
+      }
+
+      .ad {
+          position: fixed;
+          bottom: 0;
+          background-color: rgb(49, 49, 49);
+          font-size: 40rem;
+          text-align: center;
+          width: 100vw;
+          height: 65rem;
+      }
+
+    </style>
     
-
-
 
 
   </body>
