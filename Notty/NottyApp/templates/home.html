@@ -192,7 +192,9 @@
             </div>
 
             <table class="station">
-              {{ form.as_table }}
+              <!-- {{ form.as_table }} -->
+              <input type="text" class="inputText1" id="startID" name="start" value="" placeholder="출발역" onfocus="this.placeholder=''" onblur="this.placeholder='출발역'">
+              <input type="text" class="inputText2" id="finishID" name="fin" value="" placeholder="도착역" onfocus="this.placeholder=''" onblur="this.placeholder='도착역'">
             </table>
 
             <input type="hidden" name="user_token" id="data" value="">
@@ -306,7 +308,7 @@
           line-height: 32rem;
       }
 
-      .station {
+      /* .station {
         background-color: #BBBBBB;
         font-size: 20rem;
         line-height: 80rem;
@@ -314,16 +316,28 @@
         margin-bottom: 20px;
         width: 90vw;
         padding: 0px 10px;
-      }
+      } */
 
-      #id_start, #id_fin {
+      /* #id_start, #id_fin {
         height: 30px;
         width: 60vw;
         background-color: #BBBBBB;
-        /* border: black; */
         border-width: 0px 0px 3px 0px ;
         font-size: 20px;
+      } */
+
+      .inputText1, .inputText2 {
+        background-color: #BBBBBB;
+        border: 0;
+        width: 88vw;
+        height: 60rem;
+        line-height: 60rem;
+        font-size: 25rem;
+        margin-bottom: 17rem;
+        text-align: center;
       }
+
+      
 
       .search {
         background-color: #646464;
