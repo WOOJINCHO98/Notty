@@ -117,6 +117,7 @@ user_token=''
 resgistration = []
 notification_cnt = 0
 found_cnt = 0
+up_down_tag = ''
 
 # Create your views here.
 def home(request):
@@ -195,6 +196,7 @@ def home(request):
             global min_path_trans_cnt
             global min_path_msg
             global notification_cnt
+            global up_down_tag
             notification_cnt = 0
             print("--->>>",request.POST.get('answers'))
             
@@ -286,25 +288,6 @@ def home(request):
                 dest_gps_y = item.get('y')
 
             
-            
-            '''
-            #서울특별시_대중교통환승경로 조회 서비스 https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15000414
-            trans_path_key = '1WiWiadJdsEUw9VTAe8%2BpAs4K39k6ulLAGzN%2BBDvLuUedlyrTLO%2FwKXqkXW%2FEuTRT%2FLepS1etUJeBAyOvq9xVg%3D%3D'
-            trans_path_api_url = 'http://ws.bus.go.kr/api/rest/pathinfo/getPathInfoBySubway?ServiceKey='+trans_path_key+'&startX='+st_gps_x+'&startY='+st_gps_y+'&endX='+dest_gps_x+'&endY='+dest_gps_y+'&resultType=json'
-            trans_path_response = requests.get(trans_path_api_url)
-            trans_path_resdata = trans_path_response.text
-            trans_path_obj1 = json.loads(trans_path_resdata)
-            trans_path_obj = trans_path_obj1['msgBody']
-            trans_path_obj = trans_path_obj['itemList']
-            trans_path_list = []
-            for item in trans_path_obj:
-                trans_path_list = item.get('pathList')
-            
-            print(trans_path_list)
-            print('\n\n\n')
-            print('테스트텟트\n')
-            print(trans_path_obj1)
-            '''
             
             real_time_position = searchword
 
